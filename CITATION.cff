@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: "Reproducibility Artifact for Held-Out Validation of Product-Address-Aware Radix Selection for Closed Logarithmic Transformer Arithmetic"
+message: "If you use this reproducibility artifact, please cite the artifact DOI and associated manuscript."
+type: software
+authors:
+  - family-names: "Harbin-Giuntoli"
+    given-names: "Tyler James"
+    orcid: "https://orcid.org/0009-0006-9153-2759"
+version: "1.0.0"
+date-released: "2026-10-04"
+license: Apache-2.0
+repository-code: "https://github.com/pH34r-pH/compiled-experiments"
+keywords:
+  - reproducibility
+  - logarithmic arithmetic
+  - CurveFP
+  - neural network arithmetic
+  - hardware architecture
+  - compiled experiment
