@@ -10,7 +10,7 @@ This repository is the archival publication surface for reviewed Compiled Experi
 experiments/
   <experiment-id>/
     README.md
-    experiment.json
+    experiment-package-manifest.json
     ro-crate-metadata.json
     dependency-closure.json
     artifact/
@@ -22,7 +22,7 @@ experiments/
       ...
 ```
 
-The canonical scientific artifact is the compiled ZIP named in each experiment README. Human-readable source/metadata are retained beside it for inspection. Large third-party model or dataset dependencies stay at their canonical immutable upstream locations when redistribution is unnecessary; the experiment records their exact identities.
+The canonical scientific artifact is the compiled ZIP named in each experiment README. Its embedded package manifest, RO-Crate metadata, dependency closure, and independently regenerated verification/replay receipts are retained beside it for inspection. Large third-party model or dataset dependencies stay at their canonical immutable upstream locations when redistribution is unnecessary; the experiment records their exact identities.
 
 ## Release policy
 
