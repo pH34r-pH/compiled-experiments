@@ -1,0 +1,106 @@
+name: materialize #152 public archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/materialize-issue-152.yml'
+      - 'experiments/dsl-issue-152-heldout-radix-replay-v1/artifacts/issue152-replay.zip'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-issue-152
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+
+      - name: Verify uploaded canonical ZIP identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          zip="$root/artifacts/issue152-replay.zip"
+          test -f "$zip"
+          actual="$(sha256sum "$zip" | cut -d' ' -f1)"
+          test "$actual" = '25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b'
+          test "$(stat -c %s "$zip")" = '4129679'
+
+      - name: Materialize canonical metadata from the compiled ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          zip="$root/artifacts/issue152-replay.zip"
+          mkdir -p "$root/receipts"
+          unzip -p "$zip" experiment-package-manifest.json > "$root/experiment-package-manifest.json"
+          unzip -p "$zip" ro-crate-metadata.json > "$root/ro-crate-metadata.json"
+          unzip -p "$zip" dependency-closure.json > "$root/dependency-closure.json"
+          unzip -p "$zip" evidence/reference/reproduction-comparison.json > "$root/receipts/decision-stable-comparison.json"
+          unzip -p "$zip" evidence/reference/summary.json > "$root/receipts/fresh-reproduction-summary.json"
+          unzip -p "$zip" evidence/reference/source-commit.txt > "$root/receipts/source-commit.txt"
+          printf '%s  %s\n'             '25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b'             'issue152-replay.zip' > "$root/artifacts/SHA256SUMS"
+          test "$(jq -r '.classifications.hostPrerequisites[] | select(.item=="NumPy") | .requirement' "$root/dependency-closure.json")" = '2.5.2'
+          test "$(cat "$root/receipts/source-commit.txt")" = '26e3e40f8214c9b81740d9a315d4bf19cc9a5a47'
+
+      - name: Verify with the pinned Experiment Compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          git clone --filter=blob:none --no-checkout https://github.com/pH34r-pH/experiment-compiler.git "$RUNNER_TEMP/experiment-compiler"
+          git -C "$RUNNER_TEMP/experiment-compiler" checkout --detach 693e4a253893158ccd635bcedea6516dd52d46e8
+          PYTHONPATH="$RUNNER_TEMP/experiment-compiler" python -m experiment_compiler verify             "$root/artifacts/issue152-replay.zip"             --receipt "$root/receipts/experiment-compiler-verify-receipt.json"
+          test "$(jq -r '.status' "$root/receipts/experiment-compiler-verify-receipt.json")" = 'integrity-verified'
+          test "$(jq -r '.packageSha256' "$root/receipts/experiment-compiler-verify-receipt.json")" = '25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b'
+
+      - name: Execute the offline replay from the public ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          rm -rf "$RUNNER_TEMP/replay" "$RUNNER_TEMP/replay-result" "$RUNNER_TEMP/replay-venv"
+          mkdir -p "$RUNNER_TEMP/replay"
+          python -m zipfile -e "$root/artifacts/issue152-replay.zip" "$RUNNER_TEMP/replay"
+          python -m venv "$RUNNER_TEMP/replay-venv"
+          "$RUNNER_TEMP/replay-venv/bin/python" -m pip install --disable-pip-version-check             -r "$RUNNER_TEMP/replay/experiment/requirements.txt"
+          (
+            cd "$RUNNER_TEMP/replay/experiment"
+            PYTHONPATH=src "$RUNNER_TEMP/replay-venv/bin/python" reproduce.py               --output-dir "$RUNNER_TEMP/replay-result"
+          )
+          cp "$RUNNER_TEMP/replay-result/reproduction-receipt.json"             "$root/receipts/offline-replay-receipt.json"
+          test "$(jq -r '.status' "$root/receipts/offline-replay-receipt.json")" = 'matched'
+          test "$(jq -r '.decision' "$root/receipts/offline-replay-receipt.json")" = 'kill'
+          test "$(jq -r '.validatedPairCount' "$root/receipts/offline-replay-receipt.json")" = '0'
+
+      - name: Verify completed public archive
+        run: python scripts/verify_archive.py
+
+      - name: Commit generated archival metadata and receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add             "$root/experiment-package-manifest.json"             "$root/ro-crate-metadata.json"             "$root/dependency-closure.json"             "$root/artifacts/SHA256SUMS"             "$root/receipts"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Archive metadata already materialized.'
+            exit 0
+          fi
+          git commit -m 'archive(#152): materialize verified public receipts'
+          git push origin HEAD:main
