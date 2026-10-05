@@ -52,6 +52,25 @@ def verify_experiment(root: Path) -> list[str]:
     if closure.get("experimentId") != root.name:
         errors.append(f"{root.name}: dependency closure experimentId differs")
 
+    prerequisites = {
+        item.get("item"): item.get("requirement")
+        for item in closure.get("classifications", {}).get("hostPrerequisites", [])
+        if isinstance(item, dict)
+    }
+    requirements = (root / "source" / "requirements.txt").read_text().splitlines()
+    numpy_requirements = [
+        line.split("==", 1)[1]
+        for line in requirements
+        if line.startswith("numpy==") and "==" in line
+    ]
+    if len(numpy_requirements) != 1:
+        errors.append(f"{root.name}: source/requirements.txt must pin exactly one NumPy version")
+    elif prerequisites.get("NumPy") != numpy_requirements[0]:
+        errors.append(
+            f"{root.name}: dependency closure NumPy {prerequisites.get('NumPy')!r} "
+            f"differs from replay requirement {numpy_requirements[0]!r}"
+        )
+
     sums_path = root / "artifact" / "SHA256SUMS"
     for line in sums_path.read_text().splitlines():
         if not line.strip():
