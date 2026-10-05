@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "preregistration": {
+    "path": "results/closed_log/issue_152_validation/preregistration.json",
+    "sha256": "ced3b77e37a9a58dbc62b4b6b3a47bd5113e9f3210283d54060561d581861490",
+    "frozenCommit": "a3d7f67686d1b847e03d87579049a4733a243302",
+    "gitBlobSha1": "d3ca68f3aeb384a2d0ca83f63a08e61e74336e7b"
+  },
+  "model": {
+    "provider": "Hugging Face",
+    "repository": "prajjwal1/bert-small",
+    "revision": "0ec5f86f27c1a77d704439db5e01c307ea11b9d4",
+    "license": "MIT",
+    "weightFile": "pytorch_model.bin",
+    "weightSha256": "3452e7118d4a932c0ca4377b554c0348562d8bfe8f515ba2c0a8b50240119057",
+    "weightSize": 116270890
+  },
+  "tokenizer": {
+    "provider": "Hugging Face",
+    "repository": "google/bert_uncased_L-2_H-128_A-2",
+    "revision": "30b0a37ccaaa32f332884b96992754e246e48c5f",
+    "license": "Apache-2.0"
+  },
+  "historicalCapture": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.16.1",
+    "inputIdsSha256": "8d594a6e14daa3a6710fcb228042c431893457307950aca71a47b5612906af5c",
+    "attentionMaskSha256": "581532ee295f943c576ef89eee80012c0e14e08331acd62157bf57872fbc18c2",
+    "promptSha256": "378ae0b493ed896c0c506028834bb9e278205b6437bb88abe79341543fb0f101",
+    "validTokenCount": 67,
+    "traceCount": 8,
+    "numpy": "2.5.2",
+    "environmentLockCommit": "7d7e3690eb59d8df149e135031d292f550b32586",
+    "environmentLockGitBlobSha1": "2116b7c3db8551320eeebbdfaf7e62e9649a0fba"
+  }
+}
