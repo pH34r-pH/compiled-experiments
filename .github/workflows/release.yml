@@ -1,0 +1,53 @@
+name: publish reviewed compiled experiment release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'release-requests/dsl-issue-152-v1.0.0.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-dsl-issue-152-v1.0.0
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+
+      - name: Verify exact reviewed archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/verify_archive.py
+          root='experiments/dsl-issue-152-heldout-radix-replay-v1'
+          test "$(sha256sum "$root/artifacts/issue152-replay.zip" | cut -d' ' -f1)" =             '25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b'
+          test "$(jq -r '.packageSha256' "$root/receipts/experiment-compiler-verify-receipt.json")" =             '25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b'
+          test "$(jq -r '.status' "$root/receipts/offline-replay-receipt.json")" = 'matched'
+          test "$(jq -r '.decision' "$root/receipts/offline-replay-receipt.json")" = 'kill'
+          test "$(jq -r '.validatedPairCount' "$root/receipts/offline-replay-receipt.json")" = '0'
+          test "$(jq -r '.version' .zenodo.json)" = '1.0.0'
+
+      - name: Create GitHub Release for Zenodo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag='dsl-issue-152-v1.0.0'
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists."
+            exit 0
+          fi
+          gh release create "$tag"             --target "$GITHUB_SHA"             --title 'DSL #152 held-out radix-selection replay v1.0.0'             --notes $'Reproducibility artifact for Held-Out Validation of Product-Address-Aware Radix Selection for Closed Logarithmic Transformer Arithmetic.\n\nScientific disposition: kill / unsupported; 0 of 4 frozen pairs validated.\n\nCanonical Compiled Experiment SHA-256: 25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b\n\nThe committed archive verifier, Experiment Compiler receipt, and offline replay receipt all pass at this release commit. This GitHub Release is intended for archival by the connected Zenodo integration.'
