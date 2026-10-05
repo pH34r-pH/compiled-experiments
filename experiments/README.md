@@ -10,7 +10,7 @@ A released experiment should contain:
 - `dependency-closure.json`: embedded/external/runtime dependency classification;
 - `source/`: the small human-readable replay entrypoint and provenance files useful for inspection;
 - `receipts/`: Compiler integrity and scientific reproduction receipts;
-- `artifact/`: the canonical compiled ZIP and checksum inventory.
+- `artifacts/`: the canonical compiled ZIP and checksum inventory.
 
 The compiled ZIP is authoritative for the complete payload, including binary trace shards and large compressed evidence. The repository intentionally does not duplicate large decompressed evidence tables outside that ZIP.
 
