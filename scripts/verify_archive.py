@@ -29,7 +29,7 @@ def verify_experiment(root: Path) -> list[str]:
     errors: list[str] = []
     required = (
         "README.md",
-        "experiment.json",
+        "experiment-package-manifest.json",
         "ro-crate-metadata.json",
         "dependency-closure.json",
         "artifacts/SHA256SUMS",
@@ -42,11 +42,11 @@ def verify_experiment(root: Path) -> list[str]:
     if errors:
         return errors
 
-    recipe = load_json(root / "experiment.json")
-    if recipe.get("id") != root.name:
-        errors.append(
-            f"{root.name}: experiment.json id {recipe.get('id')!r} does not match directory"
-        )
+    manifest = load_json(root / "experiment-package-manifest.json")
+    if manifest.get("packageType") != "compiled-experiment":
+        errors.append(f"{root.name}: package manifest is not a compiled experiment")
+    if manifest.get("profile") != "compiled-experiment-v1":
+        errors.append(f"{root.name}: unexpected package profile {manifest.get('profile')!r}")
 
     closure = load_json(root / "dependency-closure.json")
     if closure.get("experimentId") != root.name:
