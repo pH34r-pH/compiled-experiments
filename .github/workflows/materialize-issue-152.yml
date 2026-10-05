@@ -103,4 +103,5 @@ jobs:
             exit 0
           fi
           git commit -m 'archive(#152): materialize verified public receipts'
+          git pull --rebase origin main
           git push origin HEAD:main
