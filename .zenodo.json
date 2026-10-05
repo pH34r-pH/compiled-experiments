@@ -1,7 +1,7 @@
 {
   "title": "Reproducibility Artifact for Held-Out Validation of Product-Address-Aware Radix Selection for Closed Logarithmic Transformer Arithmetic",
   "upload_type": "software",
-  "description": "Portable Compiled Experiment replay for a preregistered held-out test of empirical product-address-aware radix selection in closed logarithmic transformer arithmetic. A clean full-from-model reproduction and the bundled offline replay both reproduce the frozen negative result: decision kill, zero of four validated pairs. The primary compiled artifact is content-addressed by SHA-256 2d789d2e4169880a485bdceee542f2a75144a3b7b1a7de5284afe14c339668fb.",
+  "description": "Portable Compiled Experiment replay for a preregistered held-out test of empirical product-address-aware radix selection in closed logarithmic transformer arithmetic. A clean full-from-model reproduction and the bundled offline replay both reproduce the frozen negative result: decision kill, zero of four validated pairs. The primary compiled artifact is content-addressed by SHA-256 25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b.",
   "creators": [
     {
       "name": "Harbin-Giuntoli, Tyler James",
