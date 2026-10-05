@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "dsl-issue-152-heldout-radix-replay-v1",
+  "tag": "dsl-issue-152-v1.0.0",
+  "version": "1.0.0",
+  "canonicalPackageSha256": "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b",
+  "requestedAction": "publish-reviewed-compiled-experiment-release",
+  "zenodoArchive": true
+}
