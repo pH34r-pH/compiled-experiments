@@ -35,16 +35,16 @@ Those assets are needed only for full recapture. The archived replay is self-con
 
 The authoritative package is:
 
-`artifact/issue152-replay.zip`
+`artifacts/issue152-replay.zip`
 
-Its exact SHA-256 is recorded in `artifact/SHA256SUMS` and must match the Experiment Compiler verification receipt under `receipts/`.
+Its exact SHA-256 is recorded in `artifacts/SHA256SUMS` and must match the Experiment Compiler verification receipt under `receipts/`.
 
 The compiled ZIP contains the complete replay payload, including all eight retained operand-trace shards and compressed reference evidence. This Git directory intentionally exposes only the small human-readable source/provenance alongside the canonical ZIP rather than duplicating large decompressed evidence tables.
 
 ## Offline replay
 
-1. Verify `artifact/SHA256SUMS`.
-2. Extract `artifact/issue152-replay.zip`.
+1. Verify `artifacts/SHA256SUMS`.
+2. Extract `artifacts/issue152-replay.zip`.
 3. Create Python 3.12 with the NumPy version named by the extracted `experiment/requirements.txt`.
 4. From the extracted `experiment/` directory run:
 
