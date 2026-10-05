@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "repository": "pH34r-pH/compiled-experiments",
+  "workflowRunId": 37379212103,
+  "jobId": 111996928603,
+  "status": "success-before-protected-branch-write",
+  "verifiedSteps": [
+    "canonical-zip-identity",
+    "experiment-compiler-verification",
+    "offline-replay",
+    "archive-verification"
+  ],
+  "note": "The run completed all scientific/integrity verification successfully; only its final direct push to protected main was rejected by repository rules."
+}

@@ -1,0 +1,184 @@
+{
+  "classifications": {
+    "embedded": [
+      {
+        "item": "experiment/LICENSE.txt",
+        "path": "experiment/LICENSE.txt"
+      },
+      {
+        "item": "experiment/README.md",
+        "path": "experiment/README.md"
+      },
+      {
+        "item": "experiment/UPSTREAM-LICENSES.md",
+        "path": "experiment/UPSTREAM-LICENSES.md"
+      },
+      {
+        "item": "experiment/compare_reproduction.py",
+        "path": "experiment/compare_reproduction.py"
+      },
+      {
+        "item": "experiment/preregistration.json",
+        "path": "experiment/preregistration.json"
+      },
+      {
+        "item": "experiment/reproduce.py",
+        "path": "experiment/reproduce.py"
+      },
+      {
+        "item": "experiment/requirements.txt",
+        "path": "experiment/requirements.txt"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/__init__.py",
+        "path": "experiment/src/domain_scaling_lab/__init__.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/closed_log.py",
+        "path": "experiment/src/domain_scaling_lab/closed_log.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/closed_log_analysis.py",
+        "path": "experiment/src/domain_scaling_lab/closed_log_analysis.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/closed_log_experiments.py",
+        "path": "experiment/src/domain_scaling_lab/closed_log_experiments.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/closed_log_issue152_validation.py",
+        "path": "experiment/src/domain_scaling_lab/closed_log_issue152_validation.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/closed_log_traces.py",
+        "path": "experiment/src/domain_scaling_lab/closed_log_traces.py"
+      },
+      {
+        "item": "experiment/src/domain_scaling_lab/factor_algebra.py",
+        "path": "experiment/src/domain_scaling_lab/factor_algebra.py"
+      },
+      {
+        "item": "experiment/traces/manifest.json",
+        "path": "experiment/traces/manifest.json"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.output.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.output.dense.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.self.query.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.self.query.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.intermediate.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.intermediate.dense.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.output.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.output.dense.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.output.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.output.dense.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.self.query.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.self.query.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.intermediate.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.intermediate.dense.npz"
+      },
+      {
+        "item": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.output.dense.npz",
+        "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.output.dense.npz"
+      },
+      {
+        "item": "experiment/upstream-assets.json",
+        "path": "experiment/upstream-assets.json"
+      },
+      {
+        "item": "evidence/reference/SHA256SUMS",
+        "path": "evidence/reference/SHA256SUMS"
+      },
+      {
+        "item": "evidence/reference/bank_cost_by_module.csv",
+        "path": "evidence/reference/bank_cost_by_module.csv"
+      },
+      {
+        "item": "evidence/reference/bank_cost_pair_deltas.csv",
+        "path": "evidence/reference/bank_cost_pair_deltas.csv"
+      },
+      {
+        "item": "evidence/reference/comparison-exit-code.txt",
+        "path": "evidence/reference/comparison-exit-code.txt"
+      },
+      {
+        "item": "evidence/reference/heldout_numeric.csv",
+        "path": "evidence/reference/heldout_numeric.csv"
+      },
+      {
+        "item": "evidence/reference/key-environment.json",
+        "path": "evidence/reference/key-environment.json"
+      },
+      {
+        "item": "evidence/reference/pair_decisions.csv",
+        "path": "evidence/reference/pair_decisions.csv"
+      },
+      {
+        "item": "evidence/reference/pair_numeric_eligibility.csv",
+        "path": "evidence/reference/pair_numeric_eligibility.csv"
+      },
+      {
+        "item": "evidence/reference/platform.txt",
+        "path": "evidence/reference/platform.txt"
+      },
+      {
+        "item": "evidence/reference/python-freeze.txt",
+        "path": "evidence/reference/python-freeze.txt"
+      },
+      {
+        "item": "evidence/reference/reproduction-comparison.json",
+        "path": "evidence/reference/reproduction-comparison.json"
+      },
+      {
+        "item": "evidence/reference/source-commit.txt",
+        "path": "evidence/reference/source-commit.txt"
+      },
+      {
+        "item": "evidence/reference/summary.json",
+        "path": "evidence/reference/summary.json"
+      },
+      {
+        "item": "evidence/reference/upstream-assets.json",
+        "path": "evidence/reference/upstream-assets.json"
+      }
+    ],
+    "hostPrerequisites": [
+      {
+        "item": "Python",
+        "requirement": "3.12.x"
+      },
+      {
+        "item": "NumPy",
+        "requirement": "2.5.2"
+      }
+    ],
+    "publicImmutableReferences": [
+      {
+        "identity": "https://huggingface.co/prajjwal1/bert-small/tree/0ec5f86f27c1a77d704439db5e01c307ea11b9d4",
+        "item": "full-capture pretrained model",
+        "requiredForReplay": false
+      },
+      {
+        "identity": "https://huggingface.co/google/bert_uncased_L-2_H-128_A-2/tree/30b0a37ccaaa32f332884b96992754e246e48c5f",
+        "item": "full-capture tokenizer",
+        "requiredForReplay": false
+      }
+    ],
+    "unavailable": []
+  },
+  "experimentId": "dsl-issue-152-heldout-radix-replay-v1",
+  "runtimeNetworkRequired": false,
+  "schemaVersion": 1
+}

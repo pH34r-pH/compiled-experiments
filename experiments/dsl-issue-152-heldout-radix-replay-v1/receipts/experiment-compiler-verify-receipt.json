@@ -1,0 +1,16 @@
+{
+  "manifestSha256": "2a1934b4f40285ae1905194191a1c8c1c9f9b32802cae003a77e0960bc611ac8",
+  "matchedExpectedPackage": false,
+  "memberCount": 41,
+  "packageSha256": "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b",
+  "packageSizeBytes": 4129679,
+  "profile": "compiled-experiment-v1",
+  "schemaVersion": 1,
+  "scientificReproduction": "not-run",
+  "scope": "package-integrity-only",
+  "source": {
+    "commit": "26e3e40f8214c9b81740d9a315d4bf19cc9a5a47",
+    "repository": "pH34r-pH/domain-scaling-lab"
+  },
+  "status": "integrity-verified"
+}
