@@ -4,6 +4,32 @@ Public, versioned reproducibility artifacts produced by [Experiment Compiler](ht
 
 This repository is the archival publication surface for reviewed Compiled Experiments. Source research may live elsewhere; releases here contain the portable, content-addressed material needed to inspect and replay the published result.
 
+## Ecosystem role
+
+This repository is deliberately the **archive, not the lab and not the runner**.
+
+```text
+source-owned science (for example Domain Scaling Lab / Long Haul)
+  -> Experiment Compiler: compile / verify / finalize exact package identity
+  -> qualified execution + retained receipts where required
+  -> source-owner disclosure/publication review
+  -> compiled-experiments: exact reviewed bytes + release metadata
+  -> human-reviewed GitHub Release
+  -> Zenodo archive / DOI
+  -> DOI/release relation projected back to articles, manuscripts, and experiment pages
+```
+
+Responsibility stays separated:
+
+- source repositories own questions, protocols, evidence, interpretation, and disclosure;
+- [Experiment Compiler](https://github.com/pH34r-pH/experiment-compiler) owns package/lifecycle semantics and the live [experiments.tyharbin.com](https://experiments.tyharbin.com) reproduction projection;
+- private Fleet infrastructure may own authorized execution and operational receipts, but does not authorize public disclosure;
+- this repository preserves the exact reviewed public artifact and archival release lineage without rebuilding or rerunning it;
+- Portfolio/Research Notes own exposition;
+- Zenodo supplies the external archival record and DOI after the explicit human release step.
+
+The cross-repository integration is tracked in [issue #1](https://github.com/pH34r-pH/compiled-experiments/issues/1).
+
 ## Layout
 
 ```text
