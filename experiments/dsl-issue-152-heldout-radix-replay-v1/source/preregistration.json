@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "issue": "#152",
+  "title": "Frozen held-out validation of radix selection by empirical product-address cost",
+  "classification": "engineering_radix_selection_policy_validation_not_new_curvefp_accumulator",
+  "frozen_at_utc": "2026-09-01",
+  "source_sweep": {
+    "directory": "results/closed_log/full_radix_corrected",
+    "aggregate_csv_sha256": "0abc87ac1115bd2ae05c4860bb2e9dffbb863ae0c3b87d4527264d44ce542e43",
+    "product_csv_sha256": "35035452a5e41470a1a1f9d5fd0dd46c03abea2c7bbfabcc8d23ed52c05b0df9",
+    "selection_rule": "Within each predetermined {E3C3,E3C4} x {endpoint_cover,curvefp_ceil_absmax} cell, choose the reduced same-H pair whose higher-r member is within +5% aggregate mean scalar NMSE, is no worse in aggregate max NMSE and clipping, has lower occupied bins / higher duplicate rate / lower address entropy on all four source product traces, and has the largest occupied-bin decrease. No held-out result may add, remove, or replace a pair."
+  },
+  "quantization": {
+    "group_size": 64,
+    "scale_bits": 8,
+    "axis": -1,
+    "zero": "rank m=0 sentinel",
+    "scale_policy_note": "endpoint_cover is an engineering variation retained unchanged from the source sweep; it is not presented as CurveFP's dynamic scale policy."
+  },
+  "frozen_pairs": [
+    {
+      "id": "e3c3_endpoint_h104",
+      "E": 3,
+      "C": 3,
+      "scale_policy": "endpoint_cover",
+      "H": 104,
+      "members": [
+        {"p": 9, "q": 13, "mean_scalar_nmse": 0.001563692577533758, "max_scalar_nmse": 0.0147095, "mean_scalar_clipping_rate": 0.105164, "mean_occupied_product_bins": 191.4140625},
+        {"p": 21, "q": 13, "mean_scalar_nmse": 0.0016311244064762156, "max_scalar_nmse": 0.00175437, "mean_scalar_clipping_rate": 0.002055, "mean_occupied_product_bins": 118.5625}
+      ],
+      "expected_lower_cost_member": {"p": 21, "q": 13},
+      "source_scalar_nmse_relative_gap": 0.043123456561270174,
+      "source_occupied_bin_relative_gap": 0.6144570374275171
+    },
+    {
+      "id": "e3c4_endpoint_h104",
+      "E": 3,
+      "C": 4,
+      "scale_policy": "endpoint_cover",
+      "H": 104,
+      "members": [
+        {"p": 10, "q": 13, "mean_scalar_nmse": 0.00029860024507907086, "max_scalar_nmse": 0.00134904, "mean_scalar_clipping_rate": 0.064596, "mean_occupied_product_bins": 268.53515625},
+        {"p": 18, "q": 13, "mean_scalar_nmse": 0.00030653454068654335, "max_scalar_nmse": 0.00036365, "mean_scalar_clipping_rate": 0.003849, "mean_occupied_product_bins": 225.4765625}
+      ],
+      "expected_lower_cost_member": {"p": 18, "q": 13},
+      "source_scalar_nmse_relative_gap": 0.026571631263636288,
+      "source_occupied_bin_relative_gap": 0.19096704895880254
+    },
+    {
+      "id": "e3c3_curvefp_h40",
+      "E": 3,
+      "C": 3,
+      "scale_policy": "curvefp_ceil_absmax",
+      "H": 40,
+      "members": [
+        {"p": 7, "q": 5, "mean_scalar_nmse": 0.0019827980481108096, "max_scalar_nmse": 0.00608108639561106, "mean_scalar_clipping_rate": 0.09921061197916667, "mean_occupied_product_bins": 107.484375},
+        {"p": 9, "q": 5, "mean_scalar_nmse": 0.0020515948019341245, "max_scalar_nmse": 0.0023756671506498447, "mean_scalar_clipping_rate": 0.035115559895833336, "mean_occupied_product_bins": 100.50390625}
+      ],
+      "expected_lower_cost_member": {"p": 9, "q": 5},
+      "source_scalar_nmse_relative_gap": 0.03469387755102039,
+      "source_occupied_bin_relative_gap": 0.06945463100190566
+    },
+    {
+      "id": "e3c4_curvefp_h240",
+      "E": 3,
+      "C": 4,
+      "scale_policy": "curvefp_ceil_absmax",
+      "H": 240,
+      "members": [
+        {"p": 23, "q": 15, "mean_scalar_nmse": 0.0005781581794649164, "max_scalar_nmse": 0.0018328693910288438, "mean_scalar_clipping_rate": 0.06555582682291666, "mean_occupied_product_bins": 173.8828125},
+        {"p": 29, "q": 15, "mean_scalar_nmse": 0.0005941731749481024, "max_scalar_nmse": 0.0007715792804586505, "mean_scalar_clipping_rate": 0.0240234375, "mean_occupied_product_bins": 159.421875}
+      ],
+      "expected_lower_cost_member": {"p": 29, "q": 15},
+      "source_scalar_nmse_relative_gap": 0.027700024062632472,
+      "source_occupied_bin_relative_gap": 0.090708615113202
+    }
+  ],
+  "non_counting_calibration_pair": {
+    "id": "e3c3_curvefp_h104_small_signal",
+    "E": 3,
+    "C": 3,
+    "scale_policy": "curvefp_ceil_absmax",
+    "H": 104,
+    "members": [{"p": 19, "q": 13}, {"p": 21, "q": 13}],
+    "source_scalar_nmse_relative_gap": 0.0049,
+    "source_occupied_bin_relative_gap": 0.0237,
+    "rule": "A large routed-cost advantage here is an instrumentation warning; it never counts toward validation."
+  },
+  "held_out_capture": {
+    "model": "prajjwal1/bert-small",
+    "revision": "0ec5f86f27c1a77d704439db5e01c307ea11b9d4",
+    "tokenizer": "google/bert_uncased_L-2_H-128_A-2",
+    "tokenizer_revision": "30b0a37ccaaa32f332884b96992754e246e48c5f",
+    "prompts": [
+      "Closed logarithmic arithmetic should be evaluated on real transformer GEMMs.",
+      "A reusable trace preserves operand topology while allowing radix sweeps.",
+      "Block scales separate local quantization density from coarse dynamic range.",
+      "Accumulation cost depends on product-address occupancy and locality."
+    ],
+    "modules": {
+      "layers": [0, 3],
+      "suffixes": ["attention.self.query", "attention.output.dense", "intermediate.dense", "output.dense"],
+      "rows_per_module": 8,
+      "outputs_per_module": 8,
+      "valid_tokens_only": true
+    },
+    "requirement": "A complete exact-revision pretrained snapshot and eight captured real GEMM operand traces are mandatory. Synthetic traces, a random model, or an unavailable capture do not decide the issue."
+  },
+  "bank_cost_grid": {
+    "pair_normalized_address_envelope": "For every pair, tag/address storage uses one shared format-bound product-exponent envelope across both members. Native geometry is reported separately and is not credited as an empirical-address win.",
+    "lane_widths": [8, 16, 32, 64],
+    "bank_counts": [4, 8, 16],
+    "write_ports_per_bank": [1, 2],
+    "bank_maps": ["phase_mod", "phase_plus_exponent", "phase_xor_exponent"],
+    "lane_orders": ["identity", "even_odd_deinterleave", "bit_reverse"],
+    "architectures": ["direct_dense_histogram", "tagged_lane_merge"],
+    "tagged_lane_merge": {
+      "sets_per_bank": 4,
+      "ways_per_set": 2,
+      "replacement": "dot_scoped_set_associative_lru",
+      "overflow": "dirty_nonzero_eviction_to_direct_histogram_write",
+      "tag_width": "ceil(log2(H)) + fixed_product_exponent_width",
+      "charge": ["tag_storage", "tag_compare_bits", "tag_writes", "spill_writes", "merge_writes"]
+    },
+    "direct_dense_histogram": {
+      "charge": ["p_constant_multiply_shift_add_proxy", "phase_decode_bits", "bank_select", "bank_service_cycles", "counter_writes", "counter_reset_storage"]
+    },
+    "cost_presets": ["traffic_only", "balanced_simple_ops", "tag_expensive"]
+  },
+  "decision_rule": {
+    "numeric_eligibility": "For a pair, the held-out geometric-mean operand-NMSE ratio and geometric-mean dot-NMSE ratio must each be <=1.15, and neither member may exceed the other by >1.35 on more than two of eight modules.",
+    "routing_win": "For an eligible pair, its predeclared lower-cost member must have a <=-5% paired mean total-cost delta, lower mean cost in at least six of eight modules, and a 95% paired-module-cluster bootstrap upper bound below zero in at least 75% of the fixed topology × map × lane-order × cost-preset grid.",
+    "validate": "Validate the empirical radix-selection objective only if at least three of four frozen pairs are numerically eligible and routing wins. Report it as a workload-aware engineering selection signal, not a new CurveFP product or accumulator mechanism.",
+    "kill": "Otherwise close #152 as unsupported: the source-sweep within-H variation did not yield a robust held-out cost-vs-error advantage."
+  }
+}
