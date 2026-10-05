@@ -1,0 +1,84 @@
+name: publish release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag'
+        required: true
+        type: string
+      experiment_id:
+        description: 'Experiment directory ID'
+        required: true
+        type: string
+      expected_sha256:
+        description: 'Canonical compiled ZIP SHA-256'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+
+      - name: Verify complete public archive
+        run: python scripts/verify_archive.py
+
+      - name: Verify requested canonical artifact
+        shell: bash
+        env:
+          EXPERIMENT_ID: ${{ inputs.experiment_id }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          set -euo pipefail
+          root="experiments/$EXPERIMENT_ID"
+          test -d "$root"
+          zip="$root/artifacts/issue152-replay.zip"
+          test -f "$zip"
+          actual="$(sha256sum "$zip" | cut -d' ' -f1)"
+          test "$actual" = "$EXPECTED_SHA256"
+          grep -Fxq "$EXPECTED_SHA256  issue152-replay.zip" "$root/artifacts/SHA256SUMS"
+          test "$(jq -r '.packageSha256' "$root/receipts/experiment-compiler-verify-receipt.json")" = "$EXPECTED_SHA256"
+          test "$(jq -r '.status' "$root/receipts/offline-replay-receipt.json")" = "matched"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+          EXPERIMENT_ID: ${{ inputs.experiment_id }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag already exists: $TAG"
+            exit 1
+          fi
+          cat > "$RUNNER_TEMP/release-notes.md" <<EOF
+          # DSL #152 compiled experiment v1.0.0
+
+          Public reproducibility artifact for *Held-Out Validation of Product-Address-Aware Radix Selection for Closed Logarithmic Transformer Arithmetic*.
+
+          - Experiment ID: `$EXPERIMENT_ID`
+          - Canonical package SHA-256: `$EXPECTED_SHA256`
+          - Scientific result: `kill` / 0 of 4 frozen pairs validated
+          - Compiler verification: `integrity-verified`
+          - Offline replay: `matched`
+
+          Zenodo is connected to this repository; this GitHub Release is the archival publication event.
+          EOF
+          gh release create "$TAG" \
+            --target "${GITHUB_SHA}" \
+            --title "DSL #152 compiled experiment v1.0.0" \
+            --notes-file "$RUNNER_TEMP/release-notes.md"
