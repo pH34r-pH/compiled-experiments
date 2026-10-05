@@ -1,0 +1,10 @@
+{
+  "candidateSummarySha256": "426ec42f1301b4d20c2547e94d60e961724129a4dd7b714093381ca637b0d240",
+  "decision": "kill",
+  "referenceSummarySha256": "7b27a6f096af34f963934cb2393a908784b1eda00956c3b8fbab6ccb63116f66",
+  "requiredPairCount": 3,
+  "schemaVersion": 1,
+  "status": "matched",
+  "traceManifestSha256": "ef2aa6ea56953c2f907ec63a6e8db2587a6f1cd793c17b6e35ea7b3db1a7c9ad",
+  "validatedPairCount": 0
+}

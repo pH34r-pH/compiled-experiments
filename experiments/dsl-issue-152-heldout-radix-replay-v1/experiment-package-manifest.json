@@ -1,0 +1,221 @@
+{
+  "evidence": {
+    "dependencyClosureSha256": "4dbbb9d1b2f36baa3384b98807375f732dfc04b87842f76e2759017ce1751a20",
+    "referenceSummarySha256": "7b27a6f096af34f963934cb2393a908784b1eda00956c3b8fbab6ccb63116f66",
+    "reproductionComparisonSha256": "387a358c7e46c8f463cf1f15a0a70033fadda791222bfa2856989f89ee07005c",
+    "traceManifestSha256": "ef2aa6ea56953c2f907ec63a6e8db2587a6f1cd793c17b6e35ea7b3db1a7c9ad"
+  },
+  "members": [
+    {
+      "path": "dependency-closure.json",
+      "sha256": "4dbbb9d1b2f36baa3384b98807375f732dfc04b87842f76e2759017ce1751a20",
+      "size": 6689
+    },
+    {
+      "path": "evidence/reference/SHA256SUMS",
+      "sha256": "56e6f904c5005e9ccd93ec45672250540620ce0d176b93f8f5887c59f61b63bc",
+      "size": 2401
+    },
+    {
+      "path": "evidence/reference/bank_cost_by_module.csv",
+      "sha256": "1184a9578544bdc5f985ae644de9f83e92d2b96315d2afeef9717233d1e0f1fd",
+      "size": 57435318
+    },
+    {
+      "path": "evidence/reference/bank_cost_pair_deltas.csv",
+      "sha256": "abeecb5bccea013b3529691577863450f413ba3f5b5f266eaf1d189b473dcbc8",
+      "size": 1148763
+    },
+    {
+      "path": "evidence/reference/comparison-exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size": 2
+    },
+    {
+      "path": "evidence/reference/heldout_numeric.csv",
+      "sha256": "b056578baf0c3141282e0586ba30e765f26469f176d7a8c99c2275be66ce8075",
+      "size": 80421
+    },
+    {
+      "path": "evidence/reference/key-environment.json",
+      "sha256": "e44c67992dcba470d1dbf21fbacf9abb23ea6c3fa32d7dd1cf4c8706c1b37c0a",
+      "size": 101
+    },
+    {
+      "path": "evidence/reference/pair_decisions.csv",
+      "sha256": "2551b24832aac3fc793a54811a3fd5038d3bfa1ba6635330c13f56e888166139",
+      "size": 628
+    },
+    {
+      "path": "evidence/reference/pair_numeric_eligibility.csv",
+      "sha256": "be60bee2a35230fe762ed4e81740f735f0bbc6b02919ac96a85783e515e978b4",
+      "size": 449
+    },
+    {
+      "path": "evidence/reference/platform.txt",
+      "sha256": "5b6e55d02be29866b83fd6701259d1160cae439bed2106f04f30367d08520eed",
+      "size": 171
+    },
+    {
+      "path": "evidence/reference/python-freeze.txt",
+      "sha256": "5139bdc5c135e0dda4e36b0c43482f3cd3461e7a77c326a7c582fb2034787502",
+      "size": 1028
+    },
+    {
+      "path": "evidence/reference/reproduction-comparison.json",
+      "sha256": "387a358c7e46c8f463cf1f15a0a70033fadda791222bfa2856989f89ee07005c",
+      "size": 2370
+    },
+    {
+      "path": "evidence/reference/source-commit.txt",
+      "sha256": "998a05ea8de744998f15a9c8da729d6d0217502c63a288219b4fa2ac1df00217",
+      "size": 41
+    },
+    {
+      "path": "evidence/reference/summary.json",
+      "sha256": "7b27a6f096af34f963934cb2393a908784b1eda00956c3b8fbab6ccb63116f66",
+      "size": 4834
+    },
+    {
+      "path": "evidence/reference/upstream-assets.json",
+      "sha256": "2e27849cb43967309ece234c42a3cda4fb4a3bbc196bfd4e72ff8f35188f7eaf",
+      "size": 1445
+    },
+    {
+      "path": "experiment/LICENSE.txt",
+      "sha256": "bb28c48e3e078166e91cfc2b6db7ffebb8a0973b9e23b3df060561292d8d69ec",
+      "size": 10140
+    },
+    {
+      "path": "experiment/README.md",
+      "sha256": "390b2fe1e773ede32d3c1d1908c9dee5f5fe0cd16c4db05157a0fd28737edc58",
+      "size": 1040
+    },
+    {
+      "path": "experiment/UPSTREAM-LICENSES.md",
+      "sha256": "ee958e422758cc76a1e16befc732dfbde1127afe539fde481e9a42744d228f61",
+      "size": 513
+    },
+    {
+      "path": "experiment/compare_reproduction.py",
+      "sha256": "ae288e85af9a3f23cbe812ad0bada0668399c6ddef0e9d7662132588dc1b2083",
+      "size": 8822
+    },
+    {
+      "path": "experiment/preregistration.json",
+      "sha256": "ced3b77e37a9a58dbc62b4b6b3a47bd5113e9f3210283d54060561d581861490",
+      "size": 7931
+    },
+    {
+      "path": "experiment/reproduce.py",
+      "sha256": "95dccacb88748a5c43350893aa78a46ed948034897c71abf12daf95261617fbb",
+      "size": 2721
+    },
+    {
+      "path": "experiment/requirements.txt",
+      "sha256": "479c30179f7e62d697ca3c8af0d8943454ebc276052024d61824e0453c54bf16",
+      "size": 13
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/__init__.py",
+      "sha256": "9214a911c12c11dca3214cd829aaca3a636783347752e22d41a6d542f4b00275",
+      "size": 65
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/closed_log.py",
+      "sha256": "cc6aae5c776fb595483df99f40243c3074c681dd1fd3b5d91fabff325a78ca1a",
+      "size": 21575
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/closed_log_analysis.py",
+      "sha256": "98eaa613c2656546bfdb5a2542b609648c0998441ceb50a5eced3381ec340d14",
+      "size": 51302
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/closed_log_experiments.py",
+      "sha256": "1692f085010a39ea9c6a3ba02747fc8539a2f8c3963f4238d247a9d587dd7e1d",
+      "size": 85202
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/closed_log_issue152_validation.py",
+      "sha256": "48ffd376ed4d4ea0c96f53bcd7e2a58dbc45b4b622ed0c0f111c85f52dc5a52f",
+      "size": 31884
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/closed_log_traces.py",
+      "sha256": "1b5b7cde6d0cec17b1decc232ca977564bab46c80855fdb7a7a95e9c17216105",
+      "size": 35046
+    },
+    {
+      "path": "experiment/src/domain_scaling_lab/factor_algebra.py",
+      "sha256": "f18c70b139c7e1aefa81b0924561b9ff8bdbbc2507b8b42ae65ccd653c6b4f64",
+      "size": 21434
+    },
+    {
+      "path": "experiment/traces/manifest.json",
+      "sha256": "ef2aa6ea56953c2f907ec63a6e8db2587a6f1cd793c17b6e35ea7b3db1a7c9ad",
+      "size": 93679
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.output.dense.npz",
+      "sha256": "874762e53734b392876f3bdf80a96311364b8eaaf1b95f5c78caf918a3d01bed",
+      "size": 33130
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.attention.self.query.npz",
+      "sha256": "2cadeae927d03b8a84ff52e3cbdb83d3dd774c125fc890785cd66ef9c4476c6f",
+      "size": 31151
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.intermediate.dense.npz",
+      "sha256": "0b3ebc0d1c758584d96cd928745a8b61bd8c0fcfc8a199ddb0ea84e64da00e47",
+      "size": 33143
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.0.output.dense.npz",
+      "sha256": "2d0ac9dba1c3b957477048812b5137e82792075b499479943c788022f03e945e",
+      "size": 551995
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.output.dense.npz",
+      "sha256": "50bbdc18d2d5212d31b30c979b0d36e44b1fff146ee651883f17fa7c45366ca2",
+      "size": 33153
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.attention.self.query.npz",
+      "sha256": "9576f4d85ab8a30bf9e253fe8ef46b40cdd8c574ec363b44ddff7ea2054b1f7c",
+      "size": 33171
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.intermediate.dense.npz",
+      "sha256": "1bf7ac1f51993c9861b1cfe22e37daf654966ae1091fdb24ae29fe1035998a98",
+      "size": 33144
+    },
+    {
+      "path": "experiment/traces/prajjwal1-bert-small-0ec5f86f-encoder.layer.3.output.dense.npz",
+      "sha256": "aaa88d9d256856446fdf7a996de198db1ceb97fbd06de2c2b9c1c765643af94e",
+      "size": 550746
+    },
+    {
+      "path": "experiment/upstream-assets.json",
+      "sha256": "2e27849cb43967309ece234c42a3cda4fb4a3bbc196bfd4e72ff8f35188f7eaf",
+      "size": 1445
+    },
+    {
+      "path": "ro-crate-metadata.json",
+      "sha256": "a27e88a3aedff037eb326667c5ee7ee5d8a6a0e34a7ab6e580b69fccf8e2c1a3",
+      "size": 15218
+    }
+  ],
+  "packageType": "compiled-experiment",
+  "profile": "compiled-experiment-v1",
+  "schemaVersion": 1,
+  "source": {
+    "commit": "26e3e40f8214c9b81740d9a315d4bf19cc9a5a47",
+    "repository": "pH34r-pH/domain-scaling-lab"
+  },
+  "standards": {
+    "roCrate": "1.3"
+  },
+  "status": "reproducible"
+}

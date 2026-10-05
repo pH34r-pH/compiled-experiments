@@ -1,0 +1,48 @@
+{
+  "candidateDecision": "kill",
+  "decisionStabilityPolicy": {
+    "exactCaptureIdentityFields": [
+      "model",
+      "revision",
+      "tokenizer_model",
+      "tokenizer_revision",
+      "input_ids_sha256",
+      "attention_mask_sha256",
+      "prompt_sha256",
+      "valid_token_count",
+      "trace_count"
+    ],
+    "exactPairFields": [
+      "configuration_count",
+      "expected_lower_cost_member",
+      "numeric_eligible",
+      "pair_validates"
+    ],
+    "exactTopLevelFields": [
+      "decision",
+      "validated_pair_count",
+      "required_pair_count",
+      "held_out_trace_count"
+    ],
+    "minimumRetainedReferenceMargin": 0.5,
+    "modulesAbove1_35Maximum": 2,
+    "numericRatioMaximum": 1.15,
+    "routingWinFractionMinimum": 0.75
+  },
+  "failures": [],
+  "referenceDecision": "kill",
+  "schemaVersion": 2,
+  "scientificDecisionMatched": true,
+  "status": "matched",
+  "toleratedDifferences": [
+    "e3c3_curvefp_h40.operand_nmse_symmetric_geomean_ratio: expected 1.435753622434038, got 1.4357537406511465; retained 1.000000 of the historical decision margin",
+    "e3c3_curvefp_h40.dot_nmse_symmetric_geomean_ratio: expected 1.90722370639626, got 1.9072230770541778; retained 0.999999 of the historical decision margin",
+    "e3c3_endpoint_h104.operand_nmse_symmetric_geomean_ratio: expected 1.8832078599295528, got 1.8832078664066954; retained 1.000000 of the historical decision margin",
+    "e3c3_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 2.603617528736483, got 2.603617017613324; retained 1.000000 of the historical decision margin",
+    "e3c4_curvefp_h240.operand_nmse_symmetric_geomean_ratio: expected 1.430422903043158, got 1.4304231015060545; retained 1.000001 of the historical decision margin",
+    "e3c4_curvefp_h240.dot_nmse_symmetric_geomean_ratio: expected 2.188954189441137, got 2.1889521865579673; retained 0.999998 of the historical decision margin",
+    "e3c4_endpoint_h104.operand_nmse_symmetric_geomean_ratio: expected 1.627892092195998, got 1.6278918256070258; retained 0.999999 of the historical decision margin",
+    "e3c4_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 3.4507891289014956, got 3.450779548637015; retained 0.999996 of the historical decision margin",
+    "e3c4_endpoint_h104.routing_win_count: expected 519.0, got 518.0; retained 1.002208 of the historical decision margin"
+  ]
+}

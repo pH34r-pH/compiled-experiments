@@ -1,0 +1,111 @@
+{
+  "capture_status": [
+    {
+      "attention_mask_sha256": "581532ee295f943c576ef89eee80012c0e14e08331acd62157bf57872fbc18c2",
+      "attention_mask_shape": [
+        4,
+        18
+      ],
+      "auto_model_error": "ValueError('Unrecognized model in prajjwal1/bert-small. Should have a `model_type` key in its config.json.')",
+      "config_class": "BertConfig",
+      "fallback_tokenizer_spec": [
+        "google/bert_uncased_L-2_H-128_A-2",
+        "30b0a37ccaaa32f332884b96992754e246e48c5f"
+      ],
+      "input_ids_sha256": "8d594a6e14daa3a6710fcb228042c431893457307950aca71a47b5612906af5c",
+      "input_shape": [
+        4,
+        18
+      ],
+      "local_files_only": false,
+      "model": "prajjwal1/bert-small",
+      "model_loader": "BertConfig_BertModel_legacy_fallback",
+      "model_tokenizer_error": "ValueError(\"Couldn't instantiate the backend tokenizer from one of: \\n(1) a `tokenizers` library serialization file, \\n(2) a slow tokenizer instance to convert or \\n(3) an equivalent slow tokenizer class to instantiate and convert. \\nYou need to have sentencepiece or tiktoken installed to convert a slow tokenizer to a fast one.\")",
+      "model_type": "bert",
+      "modules": [
+        "encoder.layer.0.attention.self.query",
+        "encoder.layer.0.attention.output.dense",
+        "encoder.layer.0.intermediate.dense",
+        "encoder.layer.0.output.dense",
+        "encoder.layer.3.attention.self.query",
+        "encoder.layer.3.attention.output.dense",
+        "encoder.layer.3.intermediate.dense",
+        "encoder.layer.3.output.dense"
+      ],
+      "prompt_sha256": "378ae0b493ed896c0c506028834bb9e278205b6437bb88abe79341543fb0f101",
+      "prompts": [
+        "Closed logarithmic arithmetic should be evaluated on real transformer GEMMs.",
+        "A reusable trace preserves operand topology while allowing radix sweeps.",
+        "Block scales separate local quantization density from coarse dynamic range.",
+        "Accumulation cost depends on product-address occupancy and locality."
+      ],
+      "revision": "0ec5f86f27c1a77d704439db5e01c307ea11b9d4",
+      "status": "captured",
+      "tokenizer_model": "google/bert_uncased_L-2_H-128_A-2",
+      "tokenizer_revision": "30b0a37ccaaa32f332884b96992754e246e48c5f",
+      "tokenizer_source": "explicit_pinned_fallback",
+      "torch": "2.13.0+cu130",
+      "trace_count": 8,
+      "transformers": "5.16.1",
+      "valid_token_count": 67,
+      "valid_tokens_only": true
+    }
+  ],
+  "classification": "held_out_engineering_radix_selection_policy_test",
+  "cost_note": "All routing/write/tag values are explicit operation/storage/traffic proxies, not a hardware PPA result.",
+  "curvefp_prior_art": "CurveFP v2 signed-histogram/Kulisch semantics are reproduced; banking, tag buffers, and cost models are engineering proxies.",
+  "decision": "kill",
+  "held_out_trace_count": 8,
+  "held_out_trace_manifest": "issue152-reproduction/traces/manifest.json",
+  "issue": "#152",
+  "pair_decisions": [
+    {
+      "configuration_count": 1296,
+      "dot_nmse_symmetric_geomean_ratio": 2.603617017613324,
+      "expected_lower_cost_member": "2^(21/13)",
+      "modules_exceeding_1_35_ratio": 8,
+      "numeric_eligible": false,
+      "operand_nmse_symmetric_geomean_ratio": 1.8832078664066954,
+      "pair_id": "e3c3_endpoint_h104",
+      "pair_validates": false,
+      "routing_win_fraction": 0.5108024691358025
+    },
+    {
+      "configuration_count": 1296,
+      "dot_nmse_symmetric_geomean_ratio": 3.450779548637015,
+      "expected_lower_cost_member": "2^(18/13)",
+      "modules_exceeding_1_35_ratio": 7,
+      "numeric_eligible": false,
+      "operand_nmse_symmetric_geomean_ratio": 1.6278918256070258,
+      "pair_id": "e3c4_endpoint_h104",
+      "pair_validates": false,
+      "routing_win_fraction": 0.39969135802469136
+    },
+    {
+      "configuration_count": 1296,
+      "dot_nmse_symmetric_geomean_ratio": 1.9072230770541778,
+      "expected_lower_cost_member": "2^(9/5)",
+      "modules_exceeding_1_35_ratio": 5,
+      "numeric_eligible": false,
+      "operand_nmse_symmetric_geomean_ratio": 1.4357537406511465,
+      "pair_id": "e3c3_curvefp_h40",
+      "pair_validates": false,
+      "routing_win_fraction": 0.20833333333333334
+    },
+    {
+      "configuration_count": 1296,
+      "dot_nmse_symmetric_geomean_ratio": 2.1889521865579673,
+      "expected_lower_cost_member": "2^(29/15)",
+      "modules_exceeding_1_35_ratio": 5,
+      "numeric_eligible": false,
+      "operand_nmse_symmetric_geomean_ratio": 1.4304231015060545,
+      "pair_id": "e3c4_curvefp_h240",
+      "pair_validates": false,
+      "routing_win_fraction": 0.12962962962962962
+    }
+  ],
+  "preregistration": "results/closed_log/issue_152_validation/preregistration.json",
+  "required_pair_count": 3,
+  "trace_mode": "captured",
+  "validated_pair_count": 0
+}
