@@ -32,7 +32,7 @@ def verify_experiment(root: Path) -> list[str]:
         "experiment.json",
         "ro-crate-metadata.json",
         "dependency-closure.json",
-        "artifact/SHA256SUMS",
+        "artifacts/SHA256SUMS",
         "receipts/experiment-compiler-verify-receipt.json",
         "receipts/offline-replay-receipt.json",
     )
@@ -71,7 +71,7 @@ def verify_experiment(root: Path) -> list[str]:
             f"differs from replay requirement {numpy_requirements[0]!r}"
         )
 
-    sums_path = root / "artifact" / "SHA256SUMS"
+    sums_path = root / "artifacts" / "SHA256SUMS"
     for line in sums_path.read_text().splitlines():
         if not line.strip():
             continue
@@ -104,7 +104,7 @@ def verify_experiment(root: Path) -> list[str]:
         line for line in sums_path.read_text().splitlines() if line.strip()
     ]
     if len(artifact_lines) != 1:
-        errors.append(f"{root.name}: artifact/SHA256SUMS must name exactly one canonical ZIP")
+        errors.append(f"{root.name}: artifacts/SHA256SUMS must name exactly one canonical ZIP")
     else:
         expected, filename = artifact_lines[0].split(None, 1)
         filename = filename.lstrip("* ")
@@ -123,7 +123,7 @@ def main() -> int:
     released = [
         directory
         for directory in directories
-        if (directory / "artifact" / "SHA256SUMS").is_file()
+        if (directory / "artifacts" / "SHA256SUMS").is_file()
     ]
     staging = [directory for directory in directories if directory not in released]
     for directory in released:
