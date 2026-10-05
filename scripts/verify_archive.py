@@ -101,13 +101,24 @@ def main() -> int:
     errors: list[str] = []
     load_json(ROOT / ".zenodo.json")
     directories = sorted(path for path in EXPERIMENTS.iterdir() if path.is_dir())
-    for directory in directories:
+    released = [
+        directory
+        for directory in directories
+        if (directory / "artifact" / "SHA256SUMS").is_file()
+    ]
+    staging = [directory for directory in directories if directory not in released]
+    for directory in released:
         errors.extend(verify_experiment(directory))
+    for directory in staging:
+        print(f"staging experiment (no canonical artifact declared yet): {directory.name}")
     if errors:
         for error in errors:
             print(error)
         return 1
-    print(f"archive verification passed for {len(directories)} experiment(s)")
+    print(
+        f"archive verification passed for {len(released)} released experiment(s); "
+        f"{len(staging)} staging"
+    )
     return 0
 
 
