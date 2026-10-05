@@ -41,7 +41,7 @@ A release is not considered publication-ready merely because files are present o
 
 The first publication candidate is:
 
-`dsl-issue-152-heldout-radix-replay-v1`
+[`dsl-issue-152-heldout-radix-replay-v1`](experiments/dsl-issue-152-heldout-radix-replay-v1/)
 
 Held-out validation of product-address-aware radix selection for closed logarithmic transformer arithmetic. The reproduced disposition is `kill` / unsupported, with zero of four frozen pairs validated.
 
