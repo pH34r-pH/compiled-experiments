@@ -1,5 +1,7 @@
 # Compiled Experiments
 
+![Compiled Experiments — An archive of portable, inspectable research artifacts.](docs/assets/hero.png)
+
 Public, versioned reproducibility artifacts produced by [Experiment Compiler](https://github.com/pH34r-pH/experiment-compiler).
 
 This repository is the archival publication surface for reviewed Compiled Experiments. Source research may live elsewhere; releases here contain the portable, content-addressed material needed to inspect and replay the published result.
