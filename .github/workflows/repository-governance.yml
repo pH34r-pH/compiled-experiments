@@ -1,0 +1,18 @@
+name: Repository governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pH34r-pH/long-haul/.github/actions/repository-governance@28b9afbd17faa2baea9f2fb302abe7db71ee9882
