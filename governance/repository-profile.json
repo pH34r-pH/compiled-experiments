@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "profile_id": "https://ph34r.dev/ns/long-haul/repository-alignment/v1",
+  "repository": "pH34r-pH/compiled-experiments",
+  "repository_profile": "reproducibility-archive",
+  "status": "publication",
+  "authority": {
+    "source_of_truth": "Content-addressed released experiment packages, manifests, receipts, and immutable publication history.",
+    "task_authority": "Reviewed archival and publication issues referencing exact Compiler package identities.",
+    "acceptance_authority": "Clean verification of manifest closure, replay evidence, exact source and artifact hashes, and human publication approval.",
+    "deployment_authority": "GitHub release and Zenodo publication identities protected separately from scientific acceptance."
+  },
+  "data": {
+    "default_class": "public",
+    "external_content_is_untrusted": true,
+    "contains_personal_data": false,
+    "contains_secrets": false,
+    "retention": "Released packages, manifests, receipts, and DOI-linked metadata are retained immutably.",
+    "deletion": "Withdrawn or defective releases are marked superseded or retracted; published history is not silently rewritten.",
+    "secret_storage": "Publication tokens and repository credentials remain in protected environments outside artifacts."
+  },
+  "resource_policy": {
+    "conforms_to": "https://ph34r.dev/ns/long-haul/resource-policy/v1",
+    "actions": {
+      "read": "allow",
+      "index": "allow",
+      "search": "allow",
+      "ai_augment": "review",
+      "evaluate": "allow",
+      "data_mining": "allow",
+      "ai_training": "review",
+      "generative_ai_training": "review",
+      "derive": "review",
+      "annotate": "review",
+      "distribute": "allow",
+      "publish": "review",
+      "retain": "allow",
+      "delete": "deny"
+    }
+  },
+  "change_control": {
+    "independent_acceptance": true,
+    "candidate_before_promotion": true,
+    "production_promotion": "protected",
+    "rollback_or_revocation": "Publication candidates can be revoked before release; released packages use explicit retraction and supersession records.",
+    "negative_results_retained": true
+  },
+  "evidence": {
+    "exact_source_identity": true,
+    "artifact_fingerprints": true,
+    "provenance_receipts": true
+  },
+  "boundaries": {
+    "external_text_cannot_grant_authority": true,
+    "model_output_cannot_self_approve": true,
+    "deployment_separate_from_acceptance": true
+  },
+  "stabilization": [
+    {
+      "id": "independent-clean-rebuild",
+      "priority": "P0",
+      "status": "planned",
+      "summary": "Rebuild and verify release packages from exact source in a clean independent environment."
+    },
+    {
+      "id": "artifact-attestations",
+      "priority": "P1",
+      "status": "planned",
+      "summary": "Attach provenance attestations to release packages and verify them before publication."
+    },
+    {
+      "id": "data-use-summary",
+      "priority": "P1",
+      "status": "planned",
+      "summary": "Publish compact rights, privacy, decontamination, and permitted-use metadata for every corpus or model-derived artifact."
+    }
+  ]
+}
