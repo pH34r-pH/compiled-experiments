@@ -36,3 +36,9 @@ The first release is:
 - experiment: `dsl-issue-152-heldout-radix-replay-v1`
 - release version: `1.0.0`
 - suggested tag: `dsl-issue-152-v1.0.0`
+
+## Later verification records
+
+Record a later verification as a dated entry beside the original receipts. Identify the released package and protocol by digest, the verification command and environment, the performer and scope of independence, and the input and output receipts. Record missing inputs and failed or incomplete stages explicitly. Provide the applicable comparison rule and record decision agreement and numerical agreement separately.
+
+Preserve the original tag, ZIP, checksum, and historical receipts. A dated verification can link to earlier runs when their scope is known. Archive CI checks these records and their references using the retained files.

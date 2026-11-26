@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
+from zipfile import BadZipFile
+
+from verify_radix_scope import RECORD, verify_scope
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS = ROOT / "experiments"
@@ -19,7 +23,7 @@ def sha256(path: Path) -> str:
 
 
 def load_json(path: Path) -> dict:
-    value = json.loads(path.read_text())
+    value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         raise ValueError(f"{path}: expected JSON object")
     return value
@@ -27,6 +31,7 @@ def load_json(path: Path) -> dict:
 
 def verify_experiment(root: Path) -> list[str]:
     errors: list[str] = []
+    radix_archive = root.name == "dsl-issue-152-heldout-radix-replay-v1"
     required = (
         "README.md",
         "experiment-package-manifest.json",
@@ -35,7 +40,10 @@ def verify_experiment(root: Path) -> list[str]:
         "artifacts/SHA256SUMS",
         "receipts/experiment-compiler-verify-receipt.json",
         "receipts/offline-replay-receipt.json",
+        "source/requirements.txt",
     )
+    if radix_archive:
+        required += (RECORD,)
     for rel in required:
         if not (root / rel).is_file():
             errors.append(f"{root.name}: missing {rel}")
@@ -72,25 +80,19 @@ def verify_experiment(root: Path) -> list[str]:
         )
 
     sums_path = root / "artifacts" / "SHA256SUMS"
-    for line in sums_path.read_text().splitlines():
-        if not line.strip():
-            continue
-        try:
-            expected, filename = line.split(None, 1)
-        except ValueError:
-            errors.append(f"{root.name}: malformed SHA256SUMS line {line!r}")
-            continue
-        filename = filename.lstrip("* ")
-        target = sums_path.parent / filename
-        if not target.is_file():
-            errors.append(f"{root.name}: checksum target missing: {filename}")
-            continue
-        observed = sha256(target)
-        if observed != expected:
-            errors.append(
-                f"{root.name}: SHA-256 mismatch for {filename}: "
-                f"expected {expected}, got {observed}"
-            )
+    artifact_lines = [line for line in sums_path.read_text().splitlines() if line.strip()]
+    if len(artifact_lines) != 1:
+        return errors + [f"{root.name}: artifacts/SHA256SUMS must name exactly one canonical ZIP"]
+    checksum = re.fullmatch(r"([0-9a-f]{64})[ \t]+\*?([A-Za-z0-9][A-Za-z0-9._-]*\.zip)", artifact_lines[0])
+    if checksum is None:
+        return errors + [f"{root.name}: malformed canonical ZIP checksum"]
+    expected, filename = checksum.groups()
+    artifact = sums_path.parent / filename
+    if artifact.is_symlink() or not artifact.is_file():
+        return errors + [f"{root.name}: canonical ZIP missing or indirect: {filename}"]
+    observed = sha256(artifact)
+    if observed != expected:
+        return errors + [f"{root.name}: SHA-256 mismatch for {filename}: expected {expected}, got {observed}"]
 
     verify = load_json(root / "receipts" / "experiment-compiler-verify-receipt.json")
     if verify.get("status") != "integrity-verified":
@@ -100,19 +102,16 @@ def verify_experiment(root: Path) -> list[str]:
     if replay.get("status") != "matched":
         errors.append(f"{root.name}: offline replay receipt is not matched")
 
-    artifact_lines = [
-        line for line in sums_path.read_text().splitlines() if line.strip()
-    ]
-    if len(artifact_lines) != 1:
-        errors.append(f"{root.name}: artifacts/SHA256SUMS must name exactly one canonical ZIP")
-    else:
-        expected, filename = artifact_lines[0].split(None, 1)
-        filename = filename.lstrip("* ")
-        if verify.get("packageSha256") != expected:
-            errors.append(f"{root.name}: Compiler receipt digest differs from artifact checksum")
-        if verify.get("packageSizeBytes") != (sums_path.parent / filename).stat().st_size:
-            errors.append(f"{root.name}: Compiler receipt size differs from canonical artifact")
+    if verify.get("packageSha256") != expected:
+        errors.append(f"{root.name}: Compiler receipt digest differs from artifact checksum")
+    if verify.get("packageSizeBytes") != artifact.stat().st_size:
+        errors.append(f"{root.name}: Compiler receipt size differs from canonical artifact")
 
+    if radix_archive and not errors:
+        try:
+            verify_scope(root, artifact, observed)
+        except (AttributeError, BadZipFile, KeyError, OSError, TypeError, ValueError) as exc:
+            errors.append(f"{root.name}: invalid reproduction scope: {exc}")
     return errors
 
 

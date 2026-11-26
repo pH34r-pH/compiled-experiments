@@ -18,11 +18,9 @@ The public replay does not claim physical PPA results. Routing/write/tag quantit
 
 ## Provenance
 
-The corrected archival build is generated from Domain Scaling Lab source commit:
+The corrected archival build is generated from Domain Scaling Lab commit `26e3e40f8214c9b81740d9a315d4bf19cc9a5a47`. The source reproduction job completed the full model capture, comparison with the frozen historical result, package assembly, and retained-trace replay. The [public reproduction summary](receipts/fresh-reproduction-summary.json) records the capture from that restricted run.
 
-`26e3e40f8214c9b81740d9a315d4bf19cc9a5a47`
-
-through the reviewed `issue-152 reproduction` workflow. The run performs a clean full-from-model capture, decision-stable comparison with the frozen historical result, Compiled Experiment assembly, Compiler integrity verification, and an offline replay from the retained operand traces.
+A [separate archive job](https://github.com/pH34r-pH/compiled-experiments/actions/runs/37379212103/job/111996928603) verified the same ZIP with the pinned Compiler and replayed it in a fresh Ubuntu environment with Python 3.12 and NumPy 2.5.2. That job's replay and archive checks succeeded. Its final branch write failed.
 
 Upstream model assets are not redistributed:
 
@@ -40,6 +38,20 @@ The authoritative package is:
 Its exact SHA-256 is recorded in `artifacts/SHA256SUMS` and must match the Experiment Compiler verification receipt under `receipts/`.
 
 The compiled ZIP contains the complete replay payload, including all eight retained operand-trace shards and compressed reference evidence. This Git directory intentionally exposes only the small human-readable source/provenance alongside the canonical ZIP rather than duplicating large decompressed evidence tables.
+
+## Reproduction scope
+
+The [dated scope record](receipts/reproduction-scope-v1.json) binds the five stages to the original ZIP and the retained receipts.
+
+| Stage | Evidence |
+| --- | --- |
+| Screening and selection | The frozen protocol lists the selection rule, four pairs, and two screening CSV checksums. The CSV bytes are unavailable in the released ZIP and the pinned producer Git tree, so the historical selection cannot be reconstructed from those sources. |
+| Fresh measurement | The source reproduction job captured eight held-out traces using the pinned model and tokenizer. The release retains its summary, capture identities, and environment. |
+| Analysis on retained traces | The archive job executed `reproduce.py` from the exact ZIP in a fresh runner. It reused the producer's traces and analysis code. Its [receipt](receipts/offline-replay-receipt.json) preserves the result and output checksums. The replay summary itself is represented by its checksum. |
+| Decision agreement | The [source comparison](receipts/decision-stable-comparison.json) matched the frozen decision under the prespecified thresholds and margin rule. The archive replay also returned `kill`, with zero of four pairs validated and three required. |
+| Numerical agreement | Unassessed. The source comparison reports nine differences that preserved the decision, including a routing win count of 519 versus 518 for one pair. The study supplied a decision rule and left numerical agreement without a separate criterion. |
+
+Two synthetic comparator checks changed only the first pair's operand error ratio. Changing 1.8832078664 to 18.8321 preserved the decision comparison and recorded the numerical discrepancy. Changing it to 1.10 crossed the 1.15 threshold and failed the comparison. Both are checks of the comparison rule using a copy of the summary.
 
 ## Offline replay
 
