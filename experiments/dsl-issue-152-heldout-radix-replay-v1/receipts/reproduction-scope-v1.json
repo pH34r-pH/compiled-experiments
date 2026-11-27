@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "recordedOn": "2026-11-26",
+  "experimentId": "dsl-issue-152-heldout-radix-replay-v1",
+  "canonicalPackageSha256": "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b",
+  "producerWorkflow": {
+    "source": {
+      "repository": "pH34r-pH/domain-scaling-lab",
+      "commit": "26e3e40f8214c9b81740d9a315d4bf19cc9a5a47"
+    },
+    "runAvailability": "restricted",
+    "environment": {
+      "numpy": "2.5.2",
+      "python": "3.12.14",
+      "torch": "2.13.0+cu130",
+      "transformers": "5.16.1"
+    }
+  },
+  "archiveReplayWorkflow": {
+    "repository": "pH34r-pH/compiled-experiments",
+    "workflowCommit": "a15828e2f50d56c85763cefec66650076bad43c6",
+    "compilerCommit": "693e4a253893158ccd635bcedea6516dd52d46e8",
+    "runId": 37379212103,
+    "jobId": 111996928603,
+    "workflowConclusion": "failure",
+    "replayStepConclusion": "success",
+    "independentOfProducer": [
+      "workflow",
+      "fresh-runner-environment"
+    ],
+    "environment": {
+      "runner": "ubuntu-24.04",
+      "python": "3.12",
+      "numpy": "2.5.2"
+    },
+    "workingDirectory": "experiment",
+    "argv": [
+      "python",
+      "reproduce.py",
+      "--output-dir",
+      "$RUNNER_TEMP/replay-result"
+    ]
+  },
+  "unavailableInputs": {
+    "screening-aggregate-csv": {
+      "availability": "checksum-only",
+      "sha256": "0abc87ac1115bd2ae05c4860bb2e9dffbb863ae0c3b87d4527264d44ce542e43"
+    },
+    "screening-product-csv": {
+      "availability": "checksum-only",
+      "sha256": "35035452a5e41470a1a1f9d5fd0dd46c03abea2c7bbfabcc8d23ed52c05b0df9"
+    },
+    "offline-candidate-summary": {
+      "availability": "checksum-only",
+      "sha256": "426ec42f1301b4d20c2547e94d60e961724129a4dd7b714093381ca637b0d240"
+    }
+  },
+  "evidenceSha256": {
+    "protocol": "ced3b77e37a9a58dbc62b4b6b3a47bd5113e9f3210283d54060561d581861490",
+    "producer-environment": "e44c67992dcba470d1dbf21fbacf9abb23ea6c3fa32d7dd1cf4c8706c1b37c0a",
+    "fresh-summary": "7b27a6f096af34f963934cb2393a908784b1eda00956c3b8fbab6ccb63116f66",
+    "retained-traces": "ef2aa6ea56953c2f907ec63a6e8db2587a6f1cd793c17b6e35ea7b3db1a7c9ad",
+    "comparator": "ae288e85af9a3f23cbe812ad0bada0668399c6ddef0e9d7662132588dc1b2083",
+    "decision-comparison": "387a358c7e46c8f463cf1f15a0a70033fadda791222bfa2856989f89ee07005c",
+    "archive-replay": "c9e56df30072f81f0a997ac4b1fcd8e98ae43bb52022ce4dcdf220be5abf371e",
+    "archive-run": "bdc98aec31635039f2ccd431f79aee9e4d059f76686b1c122459aa9d4601e81e",
+    "compiler-verification": "9d5b0164b078e18083ead327e927719b943232c66ec0a4cf1f46698eb05760ff"
+  },
+  "stages": {
+    "screening-selection": {
+      "result": "unavailable",
+      "performedBy": "source-study",
+      "inputs": [
+        "screening-aggregate-csv",
+        "screening-product-csv"
+      ],
+      "receipts": [
+        "protocol"
+      ],
+      "comparisonRule": "frozen-selection-rule"
+    },
+    "fresh-measurement": {
+      "result": "source-reported",
+      "performedBy": "producer-workflow",
+      "inputs": [
+        "protocol",
+        "producer-environment"
+      ],
+      "receipts": [
+        "fresh-summary"
+      ],
+      "comparisonRule": "pinned-capture-and-protocol"
+    },
+    "retained-trace-analysis": {
+      "result": "independently-replayed",
+      "performedBy": "archive-replay-workflow",
+      "inputs": [
+        "protocol",
+        "retained-traces"
+      ],
+      "receipts": [
+        "archive-run",
+        "archive-replay",
+        "compiler-verification"
+      ],
+      "comparisonRule": "replay-retained-traces"
+    },
+    "decision-agreement": {
+      "result": "matched",
+      "performedBy": "producer-and-archive-workflows",
+      "inputs": [
+        "comparator",
+        "fresh-summary"
+      ],
+      "receipts": [
+        "decision-comparison",
+        "archive-replay"
+      ],
+      "comparisonRule": "frozen-decision-and-margin",
+      "decision": "kill",
+      "validatedPairs": 0,
+      "frozenPairs": 4,
+      "requiredPairs": 3
+    },
+    "numerical-agreement": {
+      "result": "unassessed",
+      "performedBy": "producer-workflow",
+      "inputs": [
+        "comparator",
+        "fresh-summary"
+      ],
+      "receipts": [
+        "decision-comparison"
+      ],
+      "comparisonRule": "report-differences-without-numeric-criterion",
+      "reportedDifferences": [
+        "e3c3_curvefp_h40.operand_nmse_symmetric_geomean_ratio: expected 1.435753622434038, got 1.4357537406511465; retained 1.000000 of the historical decision margin",
+        "e3c3_curvefp_h40.dot_nmse_symmetric_geomean_ratio: expected 1.90722370639626, got 1.9072230770541778; retained 0.999999 of the historical decision margin",
+        "e3c3_endpoint_h104.operand_nmse_symmetric_geomean_ratio: expected 1.8832078599295528, got 1.8832078664066954; retained 1.000000 of the historical decision margin",
+        "e3c3_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 2.603617528736483, got 2.603617017613324; retained 1.000000 of the historical decision margin",
+        "e3c4_curvefp_h240.operand_nmse_symmetric_geomean_ratio: expected 1.430422903043158, got 1.4304231015060545; retained 1.000001 of the historical decision margin",
+        "e3c4_curvefp_h240.dot_nmse_symmetric_geomean_ratio: expected 2.188954189441137, got 2.1889521865579673; retained 0.999998 of the historical decision margin",
+        "e3c4_endpoint_h104.operand_nmse_symmetric_geomean_ratio: expected 1.627892092195998, got 1.6278918256070258; retained 0.999999 of the historical decision margin",
+        "e3c4_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 3.4507891289014956, got 3.450779548637015; retained 0.999996 of the historical decision margin",
+        "e3c4_endpoint_h104.routing_win_count: expected 519.0, got 518.0; retained 1.002208 of the historical decision margin"
+      ]
+    }
+  }
+}
