@@ -7,17 +7,23 @@ import subprocess
 
 import verify_archive
 
-COMPILER_REPO = "pH34r-pH/experiment-compiler"
-SIGNER = f"{COMPILER_REPO}/.github/workflows/lifecycle.yml"
+BUILDER_WORKFLOW = re.compile(
+    r"(pH34r-pH/[A-Za-z0-9][A-Za-z0-9_.-]*)/\.github/workflows/[A-Za-z0-9][A-Za-z0-9_.-]*\.ya?ml"
+)
 
 
-def check_candidate(experiment_id: str, sha256: str, archive_commit: str, compiler_commit: str) -> None:
+def check_candidate(
+    experiment_id: str, sha256: str, archive_commit: str, builder_workflow: str, builder_commit: str
+) -> None:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", experiment_id):
         raise ValueError("Expected one archive experiment directory name")
     if not re.fullmatch(r"[0-9a-f]{64}", sha256):
         raise ValueError("Expected a full lowercase package SHA-256")
-    if not all(re.fullmatch(r"[0-9a-f]{40}", value) for value in (archive_commit, compiler_commit)):
-        raise ValueError("Expected full lowercase archive and Compiler commit SHAs")
+    if not all(re.fullmatch(r"[0-9a-f]{40}", value) for value in (archive_commit, builder_commit)):
+        raise ValueError("Expected full lowercase archive and builder commit SHAs")
+    builder = BUILDER_WORKFLOW.fullmatch(builder_workflow)
+    if builder is None:
+        raise ValueError("Expected a reviewed builder workflow in a pH34r-pH repository")
 
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=verify_archive.ROOT, text=True).strip()
     if head != archive_commit:
@@ -38,12 +44,13 @@ def check_candidate(experiment_id: str, sha256: str, archive_commit: str, compil
     subprocess.run(
         [
             "gh", "attestation", "verify", str(package),
-            "--repo", COMPILER_REPO,
-            "--signer-workflow", SIGNER,
+            "--repo", builder.group(1),
+            "--signer-workflow", builder_workflow,
             "--source-ref", "refs/heads/main",
-            "--source-digest", compiler_commit,
-            "--signer-digest", compiler_commit,
+            "--source-digest", builder_commit,
+            "--signer-digest", builder_commit,
             "--deny-self-hosted-runners",
+            "--hostname", "github.com",
             "--predicate-type", "https://slsa.dev/provenance/v1",
         ],
         check=True,
@@ -58,10 +65,11 @@ def main() -> int:
     parser.add_argument("--experiment-id", required=True)
     parser.add_argument("--sha256", required=True)
     parser.add_argument("--archive-commit", required=True)
-    parser.add_argument("--compiler-commit", required=True)
+    parser.add_argument("--builder-workflow", required=True)
+    parser.add_argument("--builder-commit", required=True)
     args = parser.parse_args()
     try:
-        check_candidate(args.experiment_id, args.sha256, args.archive_commit, args.compiler_commit)
+        check_candidate(args.experiment_id, args.sha256, args.archive_commit, args.builder_workflow, args.builder_commit)
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         parser.exit(1, f"Release candidate verification failed: {error}\n")
     return 0

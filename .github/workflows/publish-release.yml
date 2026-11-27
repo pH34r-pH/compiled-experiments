@@ -19,8 +19,12 @@ on:
         description: 'Reviewed archive main commit (full SHA)'
         required: true
         type: string
-      compiler_commit:
-        description: 'Reviewed Compiler builder commit (full SHA)'
+      builder_workflow:
+        description: 'Reviewed builder workflow (owner/repo/.github/workflows/file.yml)'
+        required: true
+        type: string
+      builder_commit:
+        description: 'Reviewed builder main commit (full SHA)'
         required: true
         type: string
 
@@ -58,13 +62,15 @@ jobs:
           EXPERIMENT_ID: ${{ inputs.experiment_id }}
           EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
           ARCHIVE_COMMIT: ${{ inputs.archive_commit }}
-          COMPILER_COMMIT: ${{ inputs.compiler_commit }}
+          BUILDER_WORKFLOW: ${{ inputs.builder_workflow }}
+          BUILDER_COMMIT: ${{ inputs.builder_commit }}
         run: |
           set -euo pipefail
           git check-ref-format "refs/tags/$TAG"
           python scripts/check_release_candidate.py \
             --experiment-id="$EXPERIMENT_ID" --sha256="$EXPECTED_SHA256" \
-            --archive-commit="$ARCHIVE_COMMIT" --compiler-commit="$COMPILER_COMMIT"
+            --archive-commit="$ARCHIVE_COMMIT" --builder-workflow="$BUILDER_WORKFLOW" \
+            --builder-commit="$BUILDER_COMMIT"
 
   publish:
     needs: verify
@@ -83,7 +89,8 @@ jobs:
           EXPERIMENT_ID: ${{ inputs.experiment_id }}
           EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
           ARCHIVE_COMMIT: ${{ inputs.archive_commit }}
-          COMPILER_COMMIT: ${{ inputs.compiler_commit }}
+          BUILDER_WORKFLOW: ${{ inputs.builder_workflow }}
+          BUILDER_COMMIT: ${{ inputs.builder_commit }}
         shell: bash
         run: |
           set -euo pipefail
@@ -92,7 +99,7 @@ jobs:
           {
             printf 'Public reproducibility artifact for `%s`.\n\n' "$EXPERIMENT_ID"
             printf -- '- Canonical package SHA-256: `%s`\n' "$EXPECTED_SHA256"
-            printf -- '- Compiler builder commit: `%s`\n' "$COMPILER_COMMIT"
+            printf -- '- Builder workflow and commit: `%s` at `%s`\n' "$BUILDER_WORKFLOW" "$BUILDER_COMMIT"
             printf -- '- [Archive and provenance verification](%s/%s/actions/runs/%s)\n\n' \
               "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
             printf 'See the experiment README for its scientific result and reproducibility scope.\n'

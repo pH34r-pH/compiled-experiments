@@ -8,7 +8,7 @@ For each publication release:
 2. Verify the canonical compiled ZIP against its recorded SHA-256.
 3. Verify Compiler integrity receipts and the scientific replay receipt.
 4. Update root `.zenodo.json` and `CITATION.cff` for the release being archived.
-5. Dispatch the owner-only release workflow with the reviewed archive and Compiler commits.
+5. Dispatch the owner-only release workflow with the reviewed archive and builder identities.
 6. Let the connected Zenodo GitHub integration archive that release.
 7. Record the Zenodo DOI and record URL back in the associated manuscript/publication metadata.
 
@@ -29,31 +29,33 @@ Creating the reviewed GitHub Release is the handoff to the owner-controlled Zeno
 
 ### Check and publish a release candidate
 
-Use the exact package SHA-256 from the Compiler build and the commit that produced its
-signed provenance. In a clean checkout of the reviewed archive commit, run:
+Use the exact package SHA-256 and review the workflow and commit that built or
+finalized it with Experiment Compiler. Use the following command in a clean
+checkout of the reviewed archive commit.
 
 ```bash
 python scripts/check_release_candidate.py \
   --experiment-id="$EXPERIMENT_ID" --sha256="$PACKAGE_SHA256" \
-  --archive-commit="$ARCHIVE_COMMIT" --compiler-commit="$COMPILER_COMMIT"
+  --archive-commit="$ARCHIVE_COMMIT" --builder-workflow="$BUILDER_WORKFLOW" \
+  --builder-commit="$BUILDER_COMMIT"
 ```
 
 The check verifies the archive and asks GitHub CLI to verify a SLSA provenance
-statement for the exact ZIP. It requires the Compiler lifecycle workflow on
-`main`, the reviewed Compiler commit as both source and signer, and a
-GitHub-hosted runner. The archive's replay records carry scientific evidence.
-If signed provenance is unavailable, keep the candidate staged.
+statement for the exact ZIP. It requires a reviewed `pH34r-pH` workflow on
+`main`, the reviewed commit as both source and signer, and a GitHub-hosted
+runner. The archive's replay records carry scientific evidence. If signed
+provenance is unavailable, keep the candidate staged.
 
 After reviewing the disclosure and the preflight result, the repository owner
 runs **publish release** on `main` with the tag, experiment ID, ZIP digest,
-archive commit, and Compiler commit. The workflow checks the dispatched commit
-and signature again before obtaining write access. It pushes the tag without
+archive commit, builder workflow, and builder commit. The workflow checks the
+dispatched commit and signature again before obtaining write access. It pushes the tag without
 force and creates a release only for an existing tag. A retry may reuse a tag
 at the same commit if publication failed after tagging. If `main` moved, review
 the new revision before dispatching again.
 
 The existing #152 releases and the original release request remain historical
-records. The retired push workflow is no longer a publication entry point.
+records.
 
 ## Versioning
 
