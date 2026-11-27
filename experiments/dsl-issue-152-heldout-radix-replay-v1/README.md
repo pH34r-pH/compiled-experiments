@@ -51,6 +51,8 @@ The [dated scope record](receipts/reproduction-scope-v1.json) binds the five sta
 | Decision agreement | The [source comparison](receipts/decision-stable-comparison.json) matched the frozen decision under the prespecified thresholds and margin rule. The archive replay also returned `kill`, with zero of four pairs validated and three required. |
 | Numerical agreement | Unassessed. The source comparison reports nine differences that preserved the decision, including a routing win count of 519 versus 518 for one pair. The study supplied a decision rule and left numerical agreement without a separate criterion. |
 
+The [November 27 clean replay record](receipts/2026-11-27-clean-replay.json) identifies the exact release ZIP, Compiler revision, runtime image, NumPy wheel, and verification command. The replay used the producer's frozen analysis code and retained traces in a fresh, network-disabled environment. The comparator recorded four tolerated differences and confirmed the frozen disposition of zero validated pairs. The replay summary has a different checksum from the earlier archive replay. Numerical agreement remains unassessed.
+
 Two synthetic comparator checks changed only the first pair's operand error ratio. Changing 1.8832078664 to 18.8321 preserved the decision comparison and recorded the numerical discrepancy. Changing it to 1.10 crossed the 1.15 threshold and failed the comparison. Both are checks of the comparison rule using a copy of the summary.
 
 ## Offline replay

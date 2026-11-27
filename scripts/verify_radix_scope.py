@@ -9,6 +9,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 RECORD = "receipts/reproduction-scope-v1.json"
+CLEAN_REPLAY_RECORD = "receipts/2026-11-27-clean-replay.json"
 RELEASED_PACKAGE_SHA256 = "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b"
 ARCHIVE_EVIDENCE = {
     "protocol": "experiment/preregistration.json",
@@ -49,6 +50,73 @@ STAGE_EVIDENCE = {
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def verify_clean_replay(root: Path, scope: dict, compiler: dict, replay: dict, comparison: dict) -> None:
+    record = json.loads((root / CLEAN_REPLAY_RECORD).read_text(encoding="utf-8"))
+    source = record["source"]
+    if (
+        type(record["schemaVersion"]) is not int
+        or record["schemaVersion"] != 1
+        or record["recordedOn"] != "2026-11-27"
+        or record["experimentId"] != root.name
+        or source["packageSha256"] != scope["canonicalPackageSha256"]
+        or source["protocolSha256"] != scope["evidenceSha256"]["protocol"]
+        or source["compilerCommit"] != scope["archiveReplayWorkflow"]["compilerCommit"]
+        or source["archiveCommit"] != "9815b62ba7fddb28caf4fc1d33abe885d5b686cd"
+        or source["releaseCommit"] != "a406be61e711dda31679fc716bd9cf480f531166"
+    ):
+        raise ValueError("clean replay does not identify the released package, protocol and pinned source")
+
+    if record["compilerVerification"] != {
+        "receipt": dict(compiler, matchedExpectedPackage=True),
+        "wrongExpectedDigestRejected": True,
+    }:
+        raise ValueError("clean replay Compiler receipt differs from the exact package verification")
+
+    if record["scope"] != {
+        "independence": ["workflow", "fresh-runner-environment"],
+        "implementation": "producer-frozen",
+        "data": "producer-retained-traces",
+        "historicalScreening": "unavailable",
+        "freshMeasurement": "not-run",
+        "numericalAgreement": "unassessed",
+    }:
+        raise ValueError("clean replay scope overstates independence or numerical agreement")
+    environment = record["environment"]
+    if (
+        environment["network"] != "disabled"
+        or not environment["python"].startswith("3.12.")
+        or environment["numpy"] != scope["archiveReplayWorkflow"]["environment"]["numpy"]
+        or re.fullmatch(r"sha256:[0-9a-f]{64}", environment["image"]) is None
+        or re.fullmatch(r"[0-9a-f]{64}", environment["numpyWheelSha256"]) is None
+        or record["argv"] != ["/tmp/environment/bin/python", "reproduce.py", "--output-dir", "/outputs/reproduction"]
+    ):
+        raise ValueError("clean replay command or environment differs from the recorded procedure")
+
+    observed = record["replayReceipt"]
+    observed_summary = observed.get("candidateSummarySha256")
+    if (
+        not isinstance(observed_summary, str)
+        or re.fullmatch(r"[0-9a-f]{64}", observed_summary) is None
+        or observed != dict(replay, candidateSummarySha256=observed_summary)
+        or record["priorReplaySummaryByteMatch"] is not (observed_summary == replay["candidateSummarySha256"])
+    ):
+        raise ValueError("clean replay result differs from the retained trace or frozen decision")
+    result = record["comparison"]
+    if (
+        result["status"] != "matched"
+        or type(result["schemaVersion"]) is not int
+        or result["schemaVersion"] != comparison["schemaVersion"]
+        or result["scientificDecisionMatched"] is not True
+        or result["referenceDecision"] != observed["decision"]
+        or result["candidateDecision"] != observed["decision"]
+        or result["decisionStabilityPolicy"] != comparison["decisionStabilityPolicy"]
+        or result["failures"]
+        or not isinstance(result["toleratedDifferences"], list)
+        or not all(isinstance(difference, str) and difference for difference in result["toleratedDifferences"])
+    ):
+        raise ValueError("clean replay comparison does not establish the frozen decision")
 
 
 def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
@@ -176,3 +244,5 @@ def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
         numeric["reportedDifferences"] != comparison["toleratedDifferences"]
     ):
         raise ValueError("numerical differences must remain visible independently of the decision")
+
+    verify_clean_replay(root, scope, compiler, replay, comparison)

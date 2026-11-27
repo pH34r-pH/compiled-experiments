@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "recordedOn": "2026-11-27",
+  "experimentId": "dsl-issue-152-heldout-radix-replay-v1",
+  "source": {
+    "releaseCommit": "a406be61e711dda31679fc716bd9cf480f531166",
+    "archiveCommit": "9815b62ba7fddb28caf4fc1d33abe885d5b686cd",
+    "archiveTarSha256": "a7500f98a769ba4d1e49719e63f062a70fe5c67f40aef2f62352a65060a7b298",
+    "compilerCommit": "693e4a253893158ccd635bcedea6516dd52d46e8",
+    "compilerTarSha256": "671dcb2854eeb51a9f06b5cf18fd9dcc4d68ebb0253f7d0c8e0022d04f602d10",
+    "packageSha256": "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b",
+    "protocolSha256": "ced3b77e37a9a58dbc62b4b6b3a47bd5113e9f3210283d54060561d581861490"
+  },
+  "compilerVerification": {
+    "receipt": {
+      "manifestSha256": "2a1934b4f40285ae1905194191a1c8c1c9f9b32802cae003a77e0960bc611ac8",
+      "matchedExpectedPackage": true,
+      "memberCount": 41,
+      "packageSha256": "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b",
+      "packageSizeBytes": 4129679,
+      "profile": "compiled-experiment-v1",
+      "schemaVersion": 1,
+      "scientificReproduction": "not-run",
+      "scope": "package-integrity-only",
+      "source": {
+        "commit": "26e3e40f8214c9b81740d9a315d4bf19cc9a5a47",
+        "repository": "pH34r-pH/domain-scaling-lab"
+      },
+      "status": "integrity-verified"
+    },
+    "wrongExpectedDigestRejected": true
+  },
+  "environment": {
+    "image": "sha256:a0f57064cbdcd6285fa45f51237ab0b35ea8ebaed06a1f5973e89e19dfb86704",
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "architecture": "x86_64",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "network": "disabled",
+    "python": "3.12.15",
+    "numpy": "2.5.2",
+    "numpyWheelSha256": "3cdec01fa790a186d430433fdd4d4ffb70eed6f0eeb4bf05c8dbe2dce0a9bcb8"
+  },
+  "scope": {
+    "independence": [
+      "workflow",
+      "fresh-runner-environment"
+    ],
+    "implementation": "producer-frozen",
+    "data": "producer-retained-traces",
+    "historicalScreening": "unavailable",
+    "freshMeasurement": "not-run",
+    "numericalAgreement": "unassessed"
+  },
+  "argv": [
+    "/tmp/environment/bin/python",
+    "reproduce.py",
+    "--output-dir",
+    "/outputs/reproduction"
+  ],
+  "setupRetries": [
+    {
+      "stage": "archive-verification",
+      "outcome": "incomplete",
+      "reason": "Initial sparse archive omitted .zenodo.json. Replay began after switching to a full exact-source archive."
+    }
+  ],
+  "replayReceipt": {
+    "candidateSummarySha256": "319ceca15a3d2be5f45fcb647c3f79d05a6fdbef168ca6a90ce71b4f3421f030",
+    "decision": "kill",
+    "referenceSummarySha256": "7b27a6f096af34f963934cb2393a908784b1eda00956c3b8fbab6ccb63116f66",
+    "requiredPairCount": 3,
+    "schemaVersion": 1,
+    "status": "matched",
+    "traceManifestSha256": "ef2aa6ea56953c2f907ec63a6e8db2587a6f1cd793c17b6e35ea7b3db1a7c9ad",
+    "validatedPairCount": 0
+  },
+  "comparison": {
+    "candidateDecision": "kill",
+    "decisionStabilityPolicy": {
+      "exactCaptureIdentityFields": [
+        "model",
+        "revision",
+        "tokenizer_model",
+        "tokenizer_revision",
+        "input_ids_sha256",
+        "attention_mask_sha256",
+        "prompt_sha256",
+        "valid_token_count",
+        "trace_count"
+      ],
+      "exactPairFields": [
+        "configuration_count",
+        "expected_lower_cost_member",
+        "numeric_eligible",
+        "pair_validates"
+      ],
+      "exactTopLevelFields": [
+        "decision",
+        "validated_pair_count",
+        "required_pair_count",
+        "held_out_trace_count"
+      ],
+      "minimumRetainedReferenceMargin": 0.5,
+      "modulesAbove1_35Maximum": 2,
+      "numericRatioMaximum": 1.15,
+      "routingWinFractionMinimum": 0.75
+    },
+    "failures": [],
+    "referenceDecision": "kill",
+    "schemaVersion": 2,
+    "scientificDecisionMatched": true,
+    "status": "matched",
+    "toleratedDifferences": [
+      "e3c3_curvefp_h40.dot_nmse_symmetric_geomean_ratio: expected 1.9072230770541778, got 1.907223077054178; retained 1.000000 of the historical decision margin",
+      "e3c3_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 2.603617017613324, got 2.603617017613325; retained 1.000000 of the historical decision margin",
+      "e3c4_curvefp_h240.dot_nmse_symmetric_geomean_ratio: expected 2.1889521865579673, got 2.1889521865579664; retained 1.000000 of the historical decision margin",
+      "e3c4_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 3.450779548637015, got 3.4507795486370116; retained 1.000000 of the historical decision margin"
+    ]
+  },
+  "priorReplaySummaryByteMatch": false
+}

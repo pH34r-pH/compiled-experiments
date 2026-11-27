@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 from verify_archive import EXPERIMENTS, verify_experiment
-from verify_radix_scope import RECORD, digest
+from verify_radix_scope import CLEAN_REPLAY_RECORD, RECORD, digest
 
 
 class RadixScopeTests(unittest.TestCase):
@@ -21,6 +21,13 @@ class RadixScopeTests(unittest.TestCase):
 
     def assert_scope_rejected(self, reason: str) -> None:
         self.scope_path.write_text(json.dumps(self.scope), encoding="utf-8")
+        self.assertIn(reason, "\n".join(verify_experiment(self.root)))
+
+    def assert_clean_replay_rejected(self, section: str, field: str, value: object, reason: str) -> None:
+        path = self.root / CLEAN_REPLAY_RECORD
+        record = json.loads(path.read_text(encoding="utf-8"))
+        record[section][field] = value
+        path.write_text(json.dumps(record), encoding="utf-8")
         self.assertIn(reason, "\n".join(verify_experiment(self.root)))
 
     def test_released_scope_verifies(self):
@@ -74,6 +81,21 @@ class RadixScopeTests(unittest.TestCase):
     def test_readable_summary_mirror_cannot_disagree_with_release(self):
         (self.root / "receipts/fresh-reproduction-summary.json").write_text("{}", encoding="utf-8")
         self.assert_scope_rejected("archival mirror differs from the canonical ZIP")
+
+    def test_clean_replay_requires_the_original_trace_manifest(self):
+        self.assert_clean_replay_rejected(
+            "replayReceipt", "traceManifestSha256", "a" * 64, "differs from the retained trace",
+        )
+
+    def test_clean_replay_requires_verified_expected_package(self):
+        self.assert_clean_replay_rejected(
+            "compilerVerification", "wrongExpectedDigestRejected", False, "differs from the exact package",
+        )
+
+    def test_clean_replay_cannot_claim_numerical_agreement(self):
+        self.assert_clean_replay_rejected(
+            "scope", "numericalAgreement", "matched", "overstates independence or numerical agreement",
+        )
 
 
 if __name__ == "__main__":
