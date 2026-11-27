@@ -97,6 +97,26 @@ class RadixScopeTests(unittest.TestCase):
             "scope", "numericalAgreement", "matched", "overstates independence or numerical agreement",
         )
 
+    def test_reported_replay_digest_cannot_be_substituted(self):
+        self.assert_clean_replay_rejected(
+            "replayReceipt", "candidateSummarySha256", "a" * 64, "reported clean replay record differs",
+        )
+
+    def test_reported_differences_cannot_be_removed(self):
+        self.assert_clean_replay_rejected(
+            "comparison", "toleratedDifferences", [], "reported clean replay record differs",
+        )
+
+    def test_independent_summary_cannot_be_substituted(self):
+        path = self.root / "receipts/2026-11-27-independent-summary.json"
+        path.write_text("{}\n", encoding="utf-8")
+        self.assertIn("independent replay summary differs", "\n".join(verify_experiment(self.root)))
+
+    def test_independent_comparison_cannot_be_substituted(self):
+        path = self.root / "receipts/2026-11-27-independent-comparison.json"
+        path.write_text("{}\n", encoding="utf-8")
+        self.assertIn("independent replay comparison differs", "\n".join(verify_experiment(self.root)))
+
 
 if __name__ == "__main__":
     unittest.main()

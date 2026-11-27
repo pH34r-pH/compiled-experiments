@@ -8,8 +8,16 @@ from datetime import date
 from pathlib import Path
 from zipfile import ZipFile
 
+from verify_radix_decision import verify_decision
+
 RECORD = "receipts/reproduction-scope-v1.json"
 CLEAN_REPLAY_RECORD = "receipts/2026-11-27-clean-replay.json"
+INDEPENDENT_OUTPUTS = {
+    "summary": ("receipts/2026-11-27-independent-summary.json", "a772c8b81462fe351b408e0e22034ab5103820af4458c00131bf5952383cf03b"),
+    "comparison": ("receipts/2026-11-27-independent-comparison.json", "1e63dd0c3ab2b14c180e8287a6de660766a1ea2c5e61beb2e01b8e5e2285e61a"),
+    "receipt": ("receipts/2026-11-27-independent-receipt.json", "e5a58a38dbe3d3e7a94d5583a6bbda38fff919c794abec95d70330d8b9fb1da1"),
+}
+CLEAN_REPORT_SHA256 = "13b352a18b05ea55b8d952963cab23d89d5c4c749d1837315ca5e5cead96a83e"
 RELEASED_PACKAGE_SHA256 = "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b"
 ARCHIVE_EVIDENCE = {
     "protocol": "experiment/preregistration.json",
@@ -116,7 +124,35 @@ def verify_clean_replay(root: Path, scope: dict, compiler: dict, replay: dict, c
         or not isinstance(result["toleratedDifferences"], list)
         or not all(isinstance(difference, str) and difference for difference in result["toleratedDifferences"])
     ):
-        raise ValueError("clean replay comparison does not establish the frozen decision")
+        raise ValueError("reported clean replay comparison conflicts with the frozen decision")
+    # The prior run did not retain its candidate summary. Pin its report as a
+    # historical assertion, not as a verified source of candidate bytes.
+    if digest((root / CLEAN_REPLAY_RECORD).read_text(encoding="utf-8").encode("utf-8")) != CLEAN_REPORT_SHA256:
+        raise ValueError("reported clean replay record differs from its reviewed bytes")
+
+
+def verify_independent_outputs(root: Path, reference: bytes, trace_digest: str, policy: dict) -> None:
+    outputs = {}
+    for name, (relative, expected) in INDEPENDENT_OUTPUTS.items():
+        data = (root / relative).read_text(encoding="utf-8").encode("utf-8")
+        if digest(data) != expected:
+            raise ValueError(f"independent replay {name} differs from its reviewed bytes")
+        outputs[name] = json.loads(data)
+    summary, comparison, receipt = outputs["summary"], outputs["comparison"], outputs["receipt"]
+    differences = verify_decision(json.loads(reference), summary)
+    if (comparison.get("status") != "matched" or comparison.get("scientificDecisionMatched") is not True
+            or comparison.get("failures") != [] or comparison.get("toleratedDifferences") != differences
+            or comparison.get("decisionStabilityPolicy") != policy
+            or comparison.get("candidateDecision") != summary["decision"]
+            or comparison.get("referenceDecision") != json.loads(reference)["decision"]):
+        raise ValueError("independent replay comparison differs from the independently checked decision")
+    if receipt != {
+        "schemaVersion": 1, "status": "matched", "decision": summary["decision"],
+        "validatedPairCount": summary["validated_pair_count"], "requiredPairCount": summary["required_pair_count"],
+        "referenceSummarySha256": digest(reference), "candidateSummarySha256": INDEPENDENT_OUTPUTS["summary"][1],
+        "traceManifestSha256": trace_digest,
+    }:
+        raise ValueError("independent replay receipt differs from retained outputs")
 
 
 def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
@@ -246,3 +282,5 @@ def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
         raise ValueError("numerical differences must remain visible independently of the decision")
 
     verify_clean_replay(root, scope, compiler, replay, comparison)
+    verify_independent_outputs(root, evidence["fresh-summary"], recorded_digests["retained-traces"],
+                               comparison["decisionStabilityPolicy"])
