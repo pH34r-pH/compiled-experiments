@@ -1,0 +1,76 @@
+name: Materialize reviewed archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      experiment_id:
+        description: Experiment directory ID on main
+        required: true
+        type: string
+      release_request:
+        description: Reviewed JSON filename under release-requests on main
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  materialize:
+    if: >-
+      github.repository == 'pH34r-pH/compiled-experiments' &&
+      github.ref == 'refs/heads/main' &&
+      github.actor == github.repository_owner &&
+      github.triggering_actor == github.repository_owner
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          repository: pH34r-pH/experiment-compiler
+          ref: 6c944e4555e356d11ef85b5444f84d11c1f8ca13
+          path: .compiler
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+
+      - name: Verify reviewed inputs and materialize metadata
+        env:
+          EXPERIMENT_ID: ${{ inputs.experiment_id }}
+          RELEASE_REQUEST: ${{ inputs.release_request }}
+          PYTHONPATH: ${{ github.workspace }}/.compiler
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C .compiler rev-parse HEAD)" = '6c944e4555e356d11ef85b5444f84d11c1f8ca13'
+          python scripts/materialize_archive.py "$EXPERIMENT_ID" "$RELEASE_REQUEST"
+          python scripts/verify_archive.py
+
+      - name: Push a staging branch for review
+        env:
+          EXPERIMENT_ID: ${{ inputs.experiment_id }}
+          GH_TOKEN: ${{ github.token }}
+          GH_PROMPT_DISABLED: '1'
+        run: |
+          set -euo pipefail
+          root="experiments/$EXPERIMENT_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$root/artifacts/SHA256SUMS" "$root/dependency-closure.json" \
+            "$root/experiment-package-manifest.json" "$root/ro-crate-metadata.json" \
+            "$root/receipts/experiment-compiler-verify-receipt.json"
+          git diff --cached --check
+          git commit -m "Materialize reviewed archive $EXPERIMENT_ID"
+          branch="archive/materialize-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' \
+            push origin "HEAD:refs/heads/$branch"
+          printf 'Staged branch `%s` for archive review.\n' "$branch" >> "$GITHUB_STEP_SUMMARY"
