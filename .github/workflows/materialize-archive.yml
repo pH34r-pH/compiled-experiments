@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: pH34r-pH/experiment-compiler
-          ref: 6c944e4555e356d11ef85b5444f84d11c1f8ca13
+          ref: 499dd4793e866b6677c4a228c8d6ebc0c9bbdd28 # v0.1.0a1
           path: .compiler
           persist-credentials: false
 
@@ -51,7 +51,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$(git -C .compiler rev-parse HEAD)" = '6c944e4555e356d11ef85b5444f84d11c1f8ca13'
+          test "$(git -C .compiler rev-parse HEAD)" = '499dd4793e866b6677c4a228c8d6ebc0c9bbdd28'
           python scripts/materialize_archive.py "$EXPERIMENT_ID" "$RELEASE_REQUEST"
           python scripts/verify_archive.py
 
