@@ -41,7 +41,7 @@ experiments/
     experiment-package-manifest.json
     ro-crate-metadata.json
     dependency-closure.json
-    artifact/
+    artifacts/
       <compiled-experiment>.zip
       SHA256SUMS
     receipts/
@@ -51,6 +51,22 @@ experiments/
 ```
 
 The canonical scientific artifact is the compiled ZIP named in each experiment README. Its embedded package manifest, RO-Crate metadata, dependency closure, and independently regenerated verification/replay receipts are retained beside it for inspection. Large third-party model or dataset dependencies stay at their canonical immutable upstream locations when redistribution is unnecessary; the experiment records their exact identities.
+
+## Materialize a reviewed archive
+
+Stage the single reviewed ZIP, the experiment overview, the source snapshot
+and requirements, and the existing `receipts/offline-replay-receipt.json`
+on `main`. Add a reviewed JSON file under `release-requests/` with
+`schemaVersion: 1`, the exact `experimentId`,
+`requestedAction: "publish-reviewed-compiled-experiment-release"`, and the
+lowercase `canonicalPackageSha256` and `offlineReplayReceiptSha256` digests.
+
+The repository owner runs **Materialize reviewed archive** on `main` with
+the experiment ID and request filename. The workflow verifies the exact ZIP
+with its pinned Compiler and checks the existing matched replay receipt. It
+stages the embedded metadata, checksum, and Compiler receipt on the branch
+listed in the workflow summary. Review that branch before merging. The
+separate release process controls publication.
 
 ## Release policy
 
