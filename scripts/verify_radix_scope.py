@@ -8,7 +8,16 @@ from datetime import date
 from pathlib import Path
 from zipfile import ZipFile
 
+from verify_radix_decision import verify_decision
+
 RECORD = "receipts/reproduction-scope-v1.json"
+CLEAN_REPLAY_RECORD = "receipts/2026-11-27-clean-replay.json"
+INDEPENDENT_OUTPUTS = {
+    "summary": ("receipts/2026-11-27-independent-summary.json", "a772c8b81462fe351b408e0e22034ab5103820af4458c00131bf5952383cf03b"),
+    "comparison": ("receipts/2026-11-27-independent-comparison.json", "1e63dd0c3ab2b14c180e8287a6de660766a1ea2c5e61beb2e01b8e5e2285e61a"),
+    "receipt": ("receipts/2026-11-27-independent-receipt.json", "e5a58a38dbe3d3e7a94d5583a6bbda38fff919c794abec95d70330d8b9fb1da1"),
+}
+CLEAN_REPORT_SHA256 = "13b352a18b05ea55b8d952963cab23d89d5c4c749d1837315ca5e5cead96a83e"
 RELEASED_PACKAGE_SHA256 = "25612d81a480dd5f8148a0dc247db58cb2fd719fe619e75ef0cd4945b3c1364b"
 ARCHIVE_EVIDENCE = {
     "protocol": "experiment/preregistration.json",
@@ -49,6 +58,101 @@ STAGE_EVIDENCE = {
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def verify_clean_replay(root: Path, scope: dict, compiler: dict, replay: dict, comparison: dict) -> None:
+    record = json.loads((root / CLEAN_REPLAY_RECORD).read_text(encoding="utf-8"))
+    source = record["source"]
+    if (
+        type(record["schemaVersion"]) is not int
+        or record["schemaVersion"] != 1
+        or record["recordedOn"] != "2026-11-27"
+        or record["experimentId"] != root.name
+        or source["packageSha256"] != scope["canonicalPackageSha256"]
+        or source["protocolSha256"] != scope["evidenceSha256"]["protocol"]
+        or source["compilerCommit"] != scope["archiveReplayWorkflow"]["compilerCommit"]
+        or source["archiveCommit"] != "9815b62ba7fddb28caf4fc1d33abe885d5b686cd"
+        or source["releaseCommit"] != "a406be61e711dda31679fc716bd9cf480f531166"
+    ):
+        raise ValueError("clean replay does not identify the released package, protocol and pinned source")
+
+    if record["compilerVerification"] != {
+        "receipt": dict(compiler, matchedExpectedPackage=True),
+        "wrongExpectedDigestRejected": True,
+    }:
+        raise ValueError("clean replay Compiler receipt differs from the exact package verification")
+
+    if record["scope"] != {
+        "independence": ["workflow", "fresh-runner-environment"],
+        "implementation": "producer-frozen",
+        "data": "producer-retained-traces",
+        "historicalScreening": "unavailable",
+        "freshMeasurement": "not-run",
+        "numericalAgreement": "unassessed",
+    }:
+        raise ValueError("clean replay scope overstates independence or numerical agreement")
+    environment = record["environment"]
+    if (
+        environment["network"] != "disabled"
+        or not environment["python"].startswith("3.12.")
+        or environment["numpy"] != scope["archiveReplayWorkflow"]["environment"]["numpy"]
+        or re.fullmatch(r"sha256:[0-9a-f]{64}", environment["image"]) is None
+        or re.fullmatch(r"[0-9a-f]{64}", environment["numpyWheelSha256"]) is None
+        or record["argv"] != ["/tmp/environment/bin/python", "reproduce.py", "--output-dir", "/outputs/reproduction"]
+    ):
+        raise ValueError("clean replay command or environment differs from the recorded procedure")
+
+    observed = record["replayReceipt"]
+    observed_summary = observed.get("candidateSummarySha256")
+    if (
+        not isinstance(observed_summary, str)
+        or re.fullmatch(r"[0-9a-f]{64}", observed_summary) is None
+        or observed != dict(replay, candidateSummarySha256=observed_summary)
+        or record["priorReplaySummaryByteMatch"] is not (observed_summary == replay["candidateSummarySha256"])
+    ):
+        raise ValueError("clean replay result differs from the retained trace or frozen decision")
+    result = record["comparison"]
+    if (
+        result["status"] != "matched"
+        or type(result["schemaVersion"]) is not int
+        or result["schemaVersion"] != comparison["schemaVersion"]
+        or result["scientificDecisionMatched"] is not True
+        or result["referenceDecision"] != observed["decision"]
+        or result["candidateDecision"] != observed["decision"]
+        or result["decisionStabilityPolicy"] != comparison["decisionStabilityPolicy"]
+        or result["failures"]
+        or not isinstance(result["toleratedDifferences"], list)
+        or not all(isinstance(difference, str) and difference for difference in result["toleratedDifferences"])
+    ):
+        raise ValueError("reported clean replay comparison conflicts with the frozen decision")
+    # The prior run did not retain its candidate summary. Pin its report as a
+    # historical assertion, not as a verified source of candidate bytes.
+    if digest((root / CLEAN_REPLAY_RECORD).read_text(encoding="utf-8").encode("utf-8")) != CLEAN_REPORT_SHA256:
+        raise ValueError("reported clean replay record differs from its reviewed bytes")
+
+
+def verify_independent_outputs(root: Path, reference: bytes, trace_digest: str, policy: dict) -> None:
+    outputs = {}
+    for name, (relative, expected) in INDEPENDENT_OUTPUTS.items():
+        data = (root / relative).read_text(encoding="utf-8").encode("utf-8")
+        if digest(data) != expected:
+            raise ValueError(f"independent replay {name} differs from its reviewed bytes")
+        outputs[name] = json.loads(data)
+    summary, comparison, receipt = outputs["summary"], outputs["comparison"], outputs["receipt"]
+    differences = verify_decision(json.loads(reference), summary)
+    if (comparison.get("status") != "matched" or comparison.get("scientificDecisionMatched") is not True
+            or comparison.get("failures") != [] or comparison.get("toleratedDifferences") != differences
+            or comparison.get("decisionStabilityPolicy") != policy
+            or comparison.get("candidateDecision") != summary["decision"]
+            or comparison.get("referenceDecision") != json.loads(reference)["decision"]):
+        raise ValueError("independent replay comparison differs from the independently checked decision")
+    if receipt != {
+        "schemaVersion": 1, "status": "matched", "decision": summary["decision"],
+        "validatedPairCount": summary["validated_pair_count"], "requiredPairCount": summary["required_pair_count"],
+        "referenceSummarySha256": digest(reference), "candidateSummarySha256": INDEPENDENT_OUTPUTS["summary"][1],
+        "traceManifestSha256": trace_digest,
+    }:
+        raise ValueError("independent replay receipt differs from retained outputs")
 
 
 def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
@@ -176,3 +280,7 @@ def verify_scope(root: Path, artifact: Path, package_digest: str) -> None:
         numeric["reportedDifferences"] != comparison["toleratedDifferences"]
     ):
         raise ValueError("numerical differences must remain visible independently of the decision")
+
+    verify_clean_replay(root, scope, compiler, replay, comparison)
+    verify_independent_outputs(root, evidence["fresh-summary"], recorded_digests["retained-traces"],
+                               comparison["decisionStabilityPolicy"])
