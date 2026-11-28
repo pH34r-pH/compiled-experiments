@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from zipfile import BadZipFile
 
-from verify_radix_scope import RECORD, verify_scope
+from verify_radix_scope import CLEAN_REPLAY_RECORD, RECORD, verify_scope
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS = ROOT / "experiments"
@@ -43,7 +43,7 @@ def verify_experiment(root: Path) -> list[str]:
         "source/requirements.txt",
     )
     if radix_archive:
-        required += (RECORD,)
+        required += (RECORD, CLEAN_REPLAY_RECORD)
     for rel in required:
         if not (root / rel).is_file():
             errors.append(f"{root.name}: missing {rel}")

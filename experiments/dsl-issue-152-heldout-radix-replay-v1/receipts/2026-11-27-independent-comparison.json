@@ -1,0 +1,43 @@
+{
+  "candidateDecision": "kill",
+  "decisionStabilityPolicy": {
+    "exactCaptureIdentityFields": [
+      "model",
+      "revision",
+      "tokenizer_model",
+      "tokenizer_revision",
+      "input_ids_sha256",
+      "attention_mask_sha256",
+      "prompt_sha256",
+      "valid_token_count",
+      "trace_count"
+    ],
+    "exactPairFields": [
+      "configuration_count",
+      "expected_lower_cost_member",
+      "numeric_eligible",
+      "pair_validates"
+    ],
+    "exactTopLevelFields": [
+      "decision",
+      "validated_pair_count",
+      "required_pair_count",
+      "held_out_trace_count"
+    ],
+    "minimumRetainedReferenceMargin": 0.5,
+    "modulesAbove1_35Maximum": 2,
+    "numericRatioMaximum": 1.15,
+    "routingWinFractionMinimum": 0.75
+  },
+  "failures": [],
+  "referenceDecision": "kill",
+  "schemaVersion": 2,
+  "scientificDecisionMatched": true,
+  "status": "matched",
+  "toleratedDifferences": [
+    "e3c3_curvefp_h40.dot_nmse_symmetric_geomean_ratio: expected 1.9072230770541778, got 1.907223077054178; retained 1.000000 of the historical decision margin",
+    "e3c3_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 2.603617017613324, got 2.603617017613325; retained 1.000000 of the historical decision margin",
+    "e3c4_curvefp_h240.dot_nmse_symmetric_geomean_ratio: expected 2.1889521865579673, got 2.1889521865579664; retained 1.000000 of the historical decision margin",
+    "e3c4_endpoint_h104.dot_nmse_symmetric_geomean_ratio: expected 3.450779548637015, got 3.4507795486370116; retained 1.000000 of the historical decision margin"
+  ]
+}
